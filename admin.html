@@ -1,58 +1,36 @@
-<!DOCTYPE html>
-<html lang='es'>
+<!doctype html>
+<html lang="es">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<meta charset="utf-8">
 <title>Administración</title>
-<link rel='stylesheet' href='style.css'>
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-    <button onclick="window.location.href='index.html'" class='btn-back'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
-    <h1><i class='fa-solid fa-user-shield'></i> Acceso Administrador</h1>
-</header>
-<div class='container'>
-    <input type='password' id='adminPass' placeholder='Ingrese código'>
-    <button onclick='login()' class='btn'>Ingresar</button>
-    <div id='adminPanel' style='display:none;'>
-        <h2><i class='fa-solid fa-user-plus'></i> Registrar Nuevo Alumno</h2>
-        <input type='text' id='nombre' placeholder='Nombre del Alumno'>
-        <input type='text' id='familiar' placeholder='Familiar del Alumno'>
-        <input type='text' id='grado' placeholder='Grado'>
-        <input type='text' id='maestro' placeholder='Maestro/a'>
-        <button onclick='registrarAlumno()' class='btn green'>Registrar Alumno</button>
-        <h3><i class='fa-solid fa-users'></i> Alumnos Registrados</h3>
-        <ul id='listaAlumnos'></ul>
-    </div>
+
+<div class="admin-container">
+  <h2>Registrar Nuevo Alumno</h2>
+
+  <input id="nombre" placeholder="Nombre del alumno">
+  <input id="familiar" placeholder="Nombre del familiar">
+  <input id="grado" placeholder="Grado">
+  <input id="telefono" placeholder="Teléfono">
+
+  <button onclick="registrarAlumno()">Registrar Alumno</button>
+
+  <h3>Alumnos Registrados</h3>
+  <ul id="listaAlumnos"></ul>
 </div>
 
-<!-- Modal para pagos -->
-<div id='modalPago' class='modal'>
-    <div class='modal-content'>
-        <span class='close' onclick='cerrarModal()'>&times;</span>
-        <h2>Registrar Pago</h2>
-        <p id='alumnoSeleccionado'></p>
-        <div id='pagosRegistrados'></div>
-        <input type='number' id='montoPago' placeholder='Monto (Lps)'>
-        <div class='meses'>
-            <button onclick="seleccionarMes('Ene')">Ene</button>
-            <button onclick="seleccionarMes('Feb')">Feb</button>
-            <button onclick="seleccionarMes('Mar')">Mar</button>
-            <button onclick="seleccionarMes('Abr')">Abr</button>
-            <button onclick="seleccionarMes('May')">May</button>
-            <button onclick="seleccionarMes('Jun')">Jun</button>
-            <button onclick="seleccionarMes('Jul')">Jul</button>
-            <button onclick="seleccionarMes('Ago')">Ago</button>
-            <button onclick="seleccionarMes('Sep')">Sep</button>
-            <button onclick="seleccionarMes('Oct')">Oct</button>
-            <button onclick="seleccionarMes('Nov')">Nov</button>
-            <button onclick="seleccionarMes('Dic')">Dic</button>
-        </div>
-        <button onclick='guardarPago()' class='btn green'>Guardar Pago</button>
-    </div>
+<!-- Modal Pagos -->
+<div id="modalPago" class="modal">
+  <div class="modal-content">
+    <h3>Registrar Pago</h3>
+    <input type="number" id="pagoMonto" placeholder="Monto (Lps)">
+    <input type="text" id="pagoMes" placeholder="Mes pagado">
+    <button onclick="guardarPago()">Guardar Pago</button>
+  </div>
 </div>
 
-<script src='script.js'></script>
+<script src="script.js"></script>
 </body>
 </html>
