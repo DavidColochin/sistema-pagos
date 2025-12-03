@@ -1,4 +1,6 @@
 const adminPassword = '1234';
+let alumnoActual = null;
+let mesSeleccionado = null;
 
 function login(){
     const pass = document.getElementById('adminPass').value;
@@ -20,6 +22,10 @@ function registrarAlumno(){
         alumnos.push({nombre, familiar, grado, maestro, pagos:{}});
         localStorage.setItem('alumnos', JSON.stringify(alumnos));
         mostrarAlumnos();
+        document.getElementById('nombre').value='';
+        document.getElementById('familiar').value='';
+        document.getElementById('grado').value='';
+        document.getElementById('maestro').value='';
     } else {
         alert('Complete todos los campos');
     }
@@ -32,9 +38,49 @@ function mostrarAlumnos(){
         lista.innerHTML = '';
         alumnos.forEach((alumno, index)=>{
             const li = document.createElement('li');
-            li.textContent = alumno.nombre + ' - ' + alumno.grado;
+            li.innerHTML = `${alumno.nombre} - ${alumno.grado} <button onclick='abrirModal(${index})'>+ Pago</button>`;
             lista.appendChild(li);
         });
+    }
+}
+
+function abrirModal(index){
+    let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
+    alumnoActual = index;
+    document.getElementById('alumnoSeleccionado').textContent = alumnos[index].nombre;
+    mostrarPagos(alumnos[index]);
+    document.getElementById('modalPago').style.display = 'flex';
+}
+
+function cerrarModal(){
+    document.getElementById('modalPago').style.display = 'none';
+}
+
+function seleccionarMes(mes){
+    mesSeleccionado = mes;
+}
+
+function guardarPago(){
+    if(mesSeleccionado && document.getElementById('montoPago').value){
+        let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
+        alumnos[alumnoActual].pagos[mesSeleccionado] = document.getElementById('montoPago').value;
+        localStorage.setItem('alumnos', JSON.stringify(alumnos));
+        mostrarPagos(alumnos[alumnoActual]);
+        document.getElementById('montoPago').value='';
+        mesSeleccionado=null;
+        cargarTabla();
+    } else {
+        alert('Seleccione mes y monto');
+    }
+}
+
+function mostrarPagos(alumno){
+    const cont = document.getElementById('pagosRegistrados');
+    cont.innerHTML = '';
+    for(let mes in alumno.pagos){
+        const div = document.createElement('div');
+        div.textContent = `${mes}: L.${alumno.pagos[mes]}`;
+        cont.appendChild(div);
     }
 }
 
@@ -47,7 +93,11 @@ function cargarTabla(){
             const tr = document.createElement('tr');
             tr.innerHTML = `<td>${alumno.nombre}</td><td>${alumno.familiar}</td><td>${alumno.grado}</td><td>${alumno.maestro}</td>`;
             for(let mes of ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']){
-                tr.innerHTML += `<td>${alumno.pagos[mes] ? '✔ L.'+alumno.pagos[mes] : '✖'}</td>`;
+                if(alumno.pagos[mes]){
+                    tr.innerHTML += `<td><i class='fa-solid fa-check' style='color:green'></i> L.${alumno.pagos[mes]}</td>`;
+                } else {
+                    tr.innerHTML += `<td><i class='fa-solid fa-xmark' style='color:red'></i></td>`;
+                }
             }
             tbody.appendChild(tr);
         });

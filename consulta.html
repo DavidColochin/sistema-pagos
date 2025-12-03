@@ -1,38 +1,31 @@
 <!DOCTYPE html>
 <html lang='es'>
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Consulta Pública</title>
-    <link rel='stylesheet' href='style.css'>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Consulta Pública</title>
+<link rel='stylesheet' href='style.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
 </head>
 <body>
-    <div class='container'>
-        <h1>Estado de Pagos</h1>
-        <table id='tablaPagos'>
-            <thead>
-                <tr>
-                    <th>Alumno</th>
-                    <th>Familiar</th>
-                    <th>Grado</th>
-                    <th>Maestro/a</th>
-                    <th>Ene</th>
-                    <th>Feb</th>
-                    <th>Mar</th>
-                    <th>Abr</th>
-                    <th>May</th>
-                    <th>Jun</th>
-                    <th>Jul</th>
-                    <th>Ago</th>
-                    <th>Sep</th>
-                    <th>Oct</th>
-                    <th>Nov</th>
-                    <th>Dic</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-    <script src='script.js'></script>
+<header>
+    <button onclick="window.location.href='index.html'" class='btn-back'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
+    <h1><i class='fa-solid fa-eye'></i> Estado de Pagos</h1>
+</header>
+<div class='container'>
+    <table id='tablaPagos'>
+        <thead>
+            <tr>
+                <th>Alumno</th>
+                <th>Familiar</th>
+                <th>Grado</th>
+                <th>Maestro/a</th>
+                <th>Ene</th><th>Feb</th><th>Mar</th><th>Abr</th><th>May</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dic</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script src='script.js'></script>
 </body>
 </html>
