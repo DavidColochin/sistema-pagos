@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Administración</title>
+    <link rel='stylesheet' href='style.css'>
+</head>
+<body>
+    <div class='container'>
+        <h1>Acceso Administrador</h1>
+        <input type='password' id='adminPass' placeholder='Ingrese código'>
+        <button onclick='login()'>Ingresar</button>
+        <div id='adminPanel' style='display:none;'>
+            <h2>Registrar Nuevo Alumno</h2>
+            <input type='text' id='nombre' placeholder='Nombre del Alumno'>
+            <input type='text' id='familiar' placeholder='Familiar del Alumno'>
+            <input type='text' id='grado' placeholder='Grado'>
+            <input type='text' id='maestro' placeholder='Maestro/a'>
+            <button onclick='registrarAlumno()'>Registrar Alumno</button>
+            <h3>Alumnos Registrados</h3>
+            <ul id='listaAlumnos'></ul>
+        </div>
+    </div>
+    <script src='script.js'></script>
+</body>
+</html>
