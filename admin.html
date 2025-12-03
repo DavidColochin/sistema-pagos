@@ -10,11 +10,13 @@
 <body>
 <header>
     <button onclick="window.location.href='index.html'" class='btn-back'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
-    <h1><i class='fa-solid fa-user-shield'></i> Acceso Administrador</h1>
+    <h1 id='tituloAdmin'><i class='fa-solid fa-user-shield'></i> Acceso Administrador</h1>
 </header>
 <div class='container'>
-    <input type='password' id='adminPass' placeholder='Ingrese código'>
-    <button onclick='login()' class='btn'>Ingresar</button>
+    <div class='login-container'>
+        <input type='password' id='adminPass' placeholder='Ingrese código'>
+        <button onclick='login()' class='btn'>Ingresar</button>
+    </div>
     <div id='adminPanel' style='display:none;'>
         <h2><i class='fa-solid fa-user-plus'></i> Registrar Nuevo Alumno</h2>
         <input type='text' id='nombre' placeholder='Nombre del Alumno'>
@@ -36,21 +38,10 @@
         <p id='alumnoSeleccionado'></p>
         <div id='pagosRegistrados'></div>
         <input type='number' id='montoPago' placeholder='Monto (Lps)'>
-        <div class='meses'>
-            <button onclick="seleccionarMes('Ene')">Ene</button>
-            <button onclick="seleccionarMes('Feb')">Feb</button>
-            <button onclick="seleccionarMes('Mar')">Mar</button>
-            <button onclick="seleccionarMes('Abr')">Abr</button>
-            <button onclick="seleccionarMes('May')">May</button>
-            <button onclick="seleccionarMes('Jun')">Jun</button>
-            <button onclick="seleccionarMes('Jul')">Jul</button>
-            <button onclick="seleccionarMes('Ago')">Ago</button>
-            <button onclick="seleccionarMes('Sep')">Sep</button>
-            <button onclick="seleccionarMes('Oct')">Oct</button>
-            <button onclick="seleccionarMes('Nov')">Nov</button>
-            <button onclick="seleccionarMes('Dic')">Dic</button>
+        <div class='meses' id='mesesContainer'></div>
+        <div style='text-align:center;'>
+            <button onclick='guardarPago()' class='btn green'>Guardar Pago</button>
         </div>
-        <button onclick='guardarPago()' class='btn green'>Guardar Pago</button>
     </div>
 </div>
 
