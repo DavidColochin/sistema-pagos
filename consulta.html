@@ -6,6 +6,7 @@
 <title>Consulta Pública</title>
 <link rel='stylesheet' href='style.css'>
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
+<script type='module' src='script.js'></script>
 </head>
 <body>
 <header>
@@ -13,16 +14,15 @@
     <h1><i class='fa-solid fa-eye'></i> Estado de Pagos</h1>
 </header>
 <div class='container'>
-    <div class='filters horizontal'>
-        <div class='filter-item'>
+    <div class='filters'>
+        <div>
             <label for='filtroGrado'><i class='fa-solid fa-layer-group'></i> Grado:</label>
             <select id='filtroGrado'></select>
         </div>
-        <div class='filter-item'>
+        <div>
             <label for='filtroMaestro'><i class='fa-solid fa-chalkboard-user'></i> Maestro/a:</label>
             <select id='filtroMaestro'></select>
         </div>
-        <button id='btnResetFiltros' class='btn gray'><i class='fa-solid fa-rotate-left'></i> Restablecer</button>
     </div>
     <table id='tablaPagos'>
         <thead>
@@ -37,6 +37,5 @@
         <tbody></tbody>
     </table>
 </div>
-<script type='module' src='script.js'></script>
 </body>
 </html>
