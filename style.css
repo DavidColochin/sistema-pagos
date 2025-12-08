@@ -25,3 +25,5 @@ th, td { padding:10px; text-align:center; border-bottom:1px solid #ddd; }
 th { background:#0d6efd; color:#fff; }
 .filters { display:flex; gap:15px; align-items:center; justify-content:center; margin:10px auto; }
 .filters select { padding:8px; border-radius:6px; border:1px solid #ccc; }
+<span class="estado-x">✘</span>
+<span class="estado-check">✔</span>
