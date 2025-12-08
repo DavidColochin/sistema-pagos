@@ -1,35 +1,30 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang='es'>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sistema de Pagos</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Sistema de Pagos Escolares</title>
+<link rel='stylesheet' href='style.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
 </head>
 <body>
-
-<h1>Registrar Pago</h1>
-<h2 id="nombreAlumno">Alumno: —</h2>
-
-<button id="btnEditarPagos" class="btn-edit">Editar Pagos</button>
-
-<div id="listaMeses"></div>
-
-<!-- Modal -->
-<div id="modalPagos" class="modal">
-  <div class="modal-content">
-    <h2>Editar Pagos</h2>
-    <p id="modalAlumnoNombre" style="font-weight:bold;"></p>
-
-    <div id="contenedorMeses"></div>
-
-    <div class="modal-buttons">
-      <button id="guardarCambios" class="btn-save">Guardar Cambios</button>
-      <button id="cerrarModal" class="btn-close">Cerrar</button>
+<header>
+    <h1><i class='fa-solid fa-school'></i> Sistema de Pagos Escolares</h1>
+    <p>Gestione y consulte los pagos de los alumnos de manera fácil y rápida</p>
+</header>
+<div class='options'>
+    <div class='card'>
+        <i class='fa-solid fa-user-shield icon'></i>
+        <h2>Administración</h2>
+        <p>Registrar alumnos y gestionar pagos mensuales.</p>
+        <a href='admin.html' class='btn'>Ingresar</a>
     </div>
-  </div>
+    <div class='card'>
+        <i class='fa-solid fa-eye icon'></i>
+        <h2>Consulta Pública</h2>
+        <p>Ver estado de pagos de todos los alumnos.</p>
+        <a href='consulta.html' class='btn'>Ver pagos</a>
+    </div>
 </div>
-
-<script src="script.js"></script>
 </body>
 </html>
