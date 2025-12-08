@@ -1,52 +1,241 @@
 <!DOCTYPE html>
-<html lang='es'>
+<html lang="es">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Administración</title>
-<link rel='stylesheet' href='style.css'>
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
-<script type='module' src='script.js'></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Estilo interno (puedo pasarlo a style.css si querés) -->
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f3f6fa;
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        background: #1f4e79;
+        color: white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+        margin: 0 auto;
+        font-size: 26px;
+        text-align: center;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn-back {
+        background: #103b60;
+        border: none;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-back:hover {
+        background: #0b2a45;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: 50px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .login-container, #adminPanel {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    input {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .btn {
+        background: #1f4e79;
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn:hover {
+        background: #173c5d;
+    }
+
+    .green {
+        background: #28a745;
+    }
+    .green:hover {
+        background: #1f7e34;
+    }
+
+    #contador {
+        margin-top: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    #listaAlumnos {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+    }
+
+    #listaAlumnos li {
+        padding: 10px;
+        background: #f2f7fc;
+        border: 1px solid #d9e2ef;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* ======= MODAL ======= */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 10;
+        padding-top: 80px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: auto;
+        padding: 25px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 450px;
+        animation: aparecer 0.3s ease;
+    }
+
+    @keyframes aparecer {
+        from { opacity: 0; transform: scale(0.8);}
+        to { opacity: 1; transform: scale(1);}
+    }
+
+    .close {
+        float: right;
+        font-size: 28px;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .close:hover {
+        color: black;
+    }
+
+    .meses {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 10px 0;
+    }
+
+    .meses button {
+        flex: 1 1 30%;
+        padding: 10px;
+        background: #dce8f7;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .meses button:hover {
+        background: #bcd4f0;
+    }
+</style>
+
 </head>
 <body>
+
 <header>
-    <h1 id='tituloAdmin'><i class='fa-solid fa-user-shield'></i> Acceso Administrador</h1>
+    <button onclick="window.location.href='index.html'" class="btn-back">
+        <i class="fa-solid fa-arrow-left"></i> Inicio
+    </button>
+    <h1 id="tituloAdmin">
+        <i class="fa-solid fa-user-shield"></i> Administración
+    </h1>
 </header>
-<div class='container'>
-    <div class='login-container vertical'>
-        <input type='password' id='adminPass' placeholder='Ingrese código'>
-        <div class='login-actions'>
-            <button onclick="window.location.href='index.html'" class='btn-back inline'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
-            <button onclick='login()' class='btn inline'>Ingresar</button>
-        </div>
+
+<button class="btn-back" onclick="window.location='index.html'">
+    <i class="fa-solid fa-house"></i> Inicio
+</button>
+
+<div class="container">
+    <!-- Login -->
+    <div class="login-container" id="loginBox">
+        <input type="password" id="adminPass" placeholder="Ingrese código">
+        <button onclick="login()" class="btn">Ingresar</button>
     </div>
-    <div id='adminPanel' style='display:none;'>
-        <h2><i class='fa-solid fa-user-plus'></i> Registrar / Editar Alumno</h2>
-        <input type='text' id='nombre' placeholder='Nombre del Alumno'>
-        <input type='text' id='familiar' placeholder='Familiar del Alumno'>
-        <input type='text' id='grado' placeholder='Grado'>
-        <input type='text' id='maestro' placeholder='Maestro/a'>
-        <button onclick='registrarAlumno()' class='btn green'>Registrar Alumno</button>
-        <p id='contador'></p>
-        <h3><i class='fa-solid fa-users'></i> Alumnos Registrados</h3>
-        <ul id='listaAlumnos'></ul>
+
+    <!-- Panel Admin -->
+    <div id="adminPanel" style="display:none;">
+        <h2><i class="fa-solid fa-user-plus"></i> Registrar Alumno</h2>
+
+        <input type="text" id="nombre" placeholder="Nombre del Alumno">
+        <input type="text" id="familiar" placeholder="Familiar del Alumno">
+        <input type="text" id="grado" placeholder="Grado">
+        <input type="text" id="maestro" placeholder="Maestro(a)">
+
+        <button onclick="registrarAlumno()" class="btn green">Registrar Alumno</button>
+
+        <p id="contador"></p>
+
+        <h3><i class="fa-solid fa-users"></i> Alumnos Registrados</h3>
+        <ul id="listaAlumnos"></ul>
     </div>
 </div>
 
-<!-- Modal para pagos -->
-<div id='modalPago' class='modal'>
-    <div class='modal-content'>
-        <span class='close' onclick='cerrarModal()'>&times;</span>
-        <h2>Registrar / Editar Pago</h2>
-        <p id='alumnoSeleccionado'></p>
-        <div id='pagosRegistrados'></div>
-        <input type='number' id='montoPago' placeholder='Monto (Lps)'>
-        <div class='meses' id='mesesContainer'></div>
-        <div style='text-align:center;'>
-            <button onclick='guardarPago()' class='btn green'>Guardar Pago</button>
-        </div>
+<!-- Modal Pagos -->
+<div id="modalPago" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal()">&times;</span>
+
+        <h2>Registrar Pago</h2>
+        <p id="alumnoSeleccionado"></p>
+        <div id="pagosRegistrados"></div>
+
+        <input type="number" id="montoPago" placeholder="Monto (Lps)">
+        <div class="meses" id="mesesContainer"></div>
+
+        <button onclick="guardarPago()" class="btn green" style="width:100%;">Guardar Pago</button>
     </div>
 </div>
 
+<script src="script.js"></script>
 </body>
 </html>
