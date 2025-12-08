@@ -10,13 +10,15 @@
 </head>
 <body>
 <header>
-    <button onclick="window.location.href='index.html'" class='btn-back'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
     <h1 id='tituloAdmin'><i class='fa-solid fa-user-shield'></i> Acceso Administrador</h1>
 </header>
 <div class='container'>
-    <div class='login-container'>
+    <div class='login-container vertical'>
         <input type='password' id='adminPass' placeholder='Ingrese código'>
-        <button onclick='login()' class='btn'>Ingresar</button>
+        <div class='login-actions'>
+            <button onclick="window.location.href='index.html'" class='btn-back inline'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
+            <button onclick='login()' class='btn inline'>Ingresar</button>
+        </div>
     </div>
     <div id='adminPanel' style='display:none;'>
         <h2><i class='fa-solid fa-user-plus'></i> Registrar Nuevo Alumno</h2>
