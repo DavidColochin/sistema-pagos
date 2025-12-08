@@ -14,124 +14,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const adminPassword = '1234';
-let alumnoActual = null;
-let mesSeleccionado = null;
 let cacheAlumnos = [];
 
-// ====== ADMIN ======
-window.login = function(){
-  const pass = document.getElementById('adminPass').value;
-  if(pass === adminPassword){
-    document.getElementById('adminPanel').style.display = 'block';
-    const title = document.getElementById('tituloAdmin'); if(title) title.style.display='none';
-    const loginBox = document.querySelector('.login-container'); if(loginBox) loginBox.style.display='none';
-    mostrarAlumnos();
-  } else { alert('Código incorrecto'); }
-}
-
-window.registrarAlumno = async function(){
-  const nombre = document.getElementById('nombre').value.trim();
-  const familiar = document.getElementById('familiar').value.trim();
-  const grado = document.getElementById('grado').value.trim();
-  const maestro = document.getElementById('maestro').value.trim();
-  if(nombre && familiar && grado && maestro){
-    await addDoc(collection(db, 'alumnos'), { nombre, familiar, grado, maestro, pagos: {} });
-    document.getElementById('nombre').value='';
-    document.getElementById('familiar').value='';
-    document.getElementById('grado').value='';
-    document.getElementById('maestro').value='';
-    await mostrarAlumnos();
-    await cargarFiltros();
-    await cargarTabla();
-  } else { alert('Complete todos los campos'); }
-}
-
-async function mostrarAlumnos(){
-  const lista = document.getElementById('listaAlumnos');
-  const contador = document.getElementById('contador');
-  if(!lista) return;
-  lista.innerHTML = '';
-  const qs = await getDocs(collection(db, 'alumnos'));
-  cacheAlumnos = [];
-  qs.forEach(docSnap => cacheAlumnos.push({ id: docSnap.id, ...docSnap.data() }));
-  cacheAlumnos.forEach(alumno => {
-    const li = document.createElement('li');
-    li.innerHTML = `${alumno.nombre} - ${alumno.grado} <div><button onclick='abrirModal("${alumno.id}")'>+ Pago</button><button onclick='eliminarAlumno("${alumno.id}")' style='background:red;'>Eliminar</button></div>`;
-    lista.appendChild(li);
-  });
-  if(contador) contador.textContent = `Total alumnos: ${cacheAlumnos.length}`;
-}
-
-window.eliminarAlumno = async function(id){
-  if(confirm('¿Eliminar este alumno?')){
-    await deleteDoc(doc(db,'alumnos',id));
-    await mostrarAlumnos();
-    await cargarFiltros();
-    await cargarTabla();
-  }
-}
-
-window.abrirModal = async function(id){
-  alumnoActual = id;
-  const alumno = cacheAlumnos.find(a=>a.id===id) || (await fetchAlumno(id));
-  const p = document.getElementById('alumnoSeleccionado'); if(p) p.textContent = alumno.nombre;
-  mostrarPagos(alumno);
-  generarBotonesMes(alumno);
-  const modal = document.getElementById('modalPago'); if(modal) modal.style.display='flex';
-}
-
-async function fetchAlumno(id){
-  const qs = await getDocs(collection(db,'alumnos'));
-  let found=null; qs.forEach(d=>{ if(d.id===id) found={ id:d.id, ...d.data() }; });
-  return found;
-}
-
-window.cerrarModal = function(){ const m=document.getElementById('modalPago'); if(m) m.style.display='none'; }
-window.seleccionarMes = function(m){ mesSeleccionado=m; }
-
-window.guardarPago = async function(){
-  const input = document.getElementById('montoPago');
-  if(mesSeleccionado && input && input.value){
-    const monto = input.value;
-    const ref = doc(db,'alumnos',alumnoActual);
-    const alumno = cacheAlumnos.find(a=>a.id===alumnoActual) || (await fetchAlumno(alumnoActual));
-    alumno.pagos = alumno.pagos || {}; alumno.pagos[mesSeleccionado] = monto;
-    await updateDoc(ref,{ pagos: alumno.pagos });
-    await mostrarAlumnos();
-    const actualizado = cacheAlumnos.find(a=>a.id===alumnoActual);
-    mostrarPagos(actualizado); generarBotonesMes(actualizado);
-    input.value=''; mesSeleccionado=null; await cargarTabla();
-  } else { alert('Seleccione mes y monto'); }
-}
-
-function mostrarPagos(alumno){
-  const cont = document.getElementById('pagosRegistrados'); if(!cont) return;
-  cont.innerHTML='';
-  for(const mes in (alumno.pagos||{})){
-    const div = document.createElement('div');
-    div.textContent = `${mes}: L.${alumno.pagos[mes]}`; cont.appendChild(div);
-  }
-}
-
-function generarBotonesMes(alumno){
-  const cont = document.getElementById('mesesContainer'); if(!cont) return;
-  cont.innerHTML='';
-  for(const mes of ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']){
-    const btn = document.createElement('button'); btn.textContent = mes;
-    if(alumno.pagos && alumno.pagos[mes]){ btn.classList.add('disabled'); btn.textContent = mes+' (Pago)'; }
-    else { btn.onclick = ()=> window.seleccionarMes(mes); }
-    cont.appendChild(btn);
-  }
-}
-
-// ====== CONSULTA: filtros ======
 async function cargarTodos(){
   const qs = await getDocs(collection(db,'alumnos'));
   cacheAlumnos = []; qs.forEach(docSnap=>cacheAlumnos.push({ id:docSnap.id, ...docSnap.data() }));
 }
 
-window.cargarFiltros = async function(){
+export async function cargarFiltros(){
   const gradoSel = document.getElementById('filtroGrado');
   const maestroSel = document.getElementById('filtroMaestro');
   await cargarTodos();
@@ -145,7 +35,7 @@ window.cargarFiltros = async function(){
   }
 }
 
-window.cargarTabla = async function(){
+export async function cargarTabla(){
   const tbody = document.querySelector('#tablaPagos tbody'); if(!tbody) return;
   const gradoSel = document.getElementById('filtroGrado');
   const maestroSel = document.getElementById('filtroMaestro');
@@ -166,12 +56,19 @@ window.cargarTabla = async function(){
   });
 }
 
-// Attach events
 window.addEventListener('DOMContentLoaded', async ()=>{
   await cargarFiltros();
   await cargarTabla();
   const gradoSel = document.getElementById('filtroGrado');
   const maestroSel = document.getElementById('filtroMaestro');
+  const btnReset = document.getElementById('btnResetFiltros');
   if(gradoSel) gradoSel.addEventListener('change', cargarTabla);
   if(maestroSel) maestroSel.addEventListener('change', cargarTabla);
+  if(btnReset){
+    btnReset.addEventListener('click', async ()=>{
+      if(gradoSel) gradoSel.value = 'Todos';
+      if(maestroSel) maestroSel.value = 'Todos';
+      await cargarTabla();
+    });
+  }
 });
