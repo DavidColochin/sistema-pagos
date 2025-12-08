@@ -1,8 +1,9 @@
+
 body { font-family: Arial, sans-serif; background:#f4f6f9; margin:0; }
 header { background:#0d6efd; color:#fff; padding:15px; text-align:center; position:relative; }
 header .btn-back { position:absolute; left:15px; top:15px; background:#fff; color:#0d6efd; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; }
 .login-container { display:flex; justify-content:center; gap:10px; margin:20px auto; }
-.login-container.vertical { flex-direction:column; align-items:center; width:100%; max-width:900px; }
+.login-container.vertical { flex-direction:column; align-items:center; }
 .login-actions { display:flex; gap:10px; justify-content:center; margin-top:10px; }
 .options { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; margin-top:30px; }
 .card { background:#fff; padding:20px; border-radius:10px; width:300px; box-shadow:0 2px 8px rgba(0,0,0,0.1); text-align:center; }
@@ -25,8 +26,4 @@ th, td { padding:10px; text-align:center; border-bottom:1px solid #ddd; }
 th { background:#0d6efd; color:#fff; }
 .filters { display:flex; gap:15px; align-items:center; justify-content:center; margin:10px auto; }
 .filters select { padding:8px; border-radius:6px; border:1px solid #ccc; }
-
-.login-actions.center-row{ display:flex; justify-content:center; gap:12px; }
-.filters.horizontal{ display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap; margin:12px auto; }
-.filter-item label{ margin-right:6px; }
-.filter-item select{ padding:8px; border-radius:6px; border:1px solid #ccc; }
+#btnResetFiltros { margin-left: 10px; }
