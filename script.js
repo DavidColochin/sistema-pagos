@@ -20,6 +20,9 @@ let alumnoActual = null;
 let mesSeleccionado = null;
 let cacheAlumnos = [];
 
+// Meses visibles (Enero y Diciembre removidos por pedido)
+const MESES = ['Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov'];
+
 // ====== ADMIN ======
 window.login = function(){
   const pass = document.getElementById('adminPass').value;
@@ -62,7 +65,15 @@ async function mostrarAlumnos(){
   querySnapshot.forEach(docSnap => { cacheAlumnos.push({ id: docSnap.id, ...docSnap.data() }); });
   cacheAlumnos.forEach((alumno) => {
     const li = document.createElement('li');
-    li.innerHTML = `${alumno.nombre} - ${alumno.grado} <div><button onclick='abrirModal("${alumno.id}")'>+ Pago</button><button onclick='eliminarAlumno("${alumno.id}")' style='background:red;'>Eliminar</button></div>`;
+    li.innerHTML = `
+      <div style="flex:1;text-align:left;">
+        <strong>${alumno.nombre}</strong><br><small>${alumno.grado} - ${alumno.familiar}</small>
+      </div>
+      <div>
+        <button onclick='abrirModal("${alumno.id}")'>+ Pago</button>
+        <button onclick='editarAlumno("${alumno.id}")'>Editar</button>
+        <button onclick='eliminarAlumno("${alumno.id}")' style='background:red;'>Eliminar</button>
+      </div>`;
     lista.appendChild(li);
   });
   if(contador) contador.textContent = `Total alumnos: ${cacheAlumnos.length}`;
@@ -75,6 +86,19 @@ window.eliminarAlumno = async function(id){
     cargarTabla();
     cargarFiltros();
   }
+}
+
+window.editarAlumno = async function(id){
+  const a = cacheAlumnos.find(x=>x.id===id) || await fetchAlumno(id);
+  if(!a) return alert('Alumno no encontrado');
+  const nuevoNombre = prompt('Nombre', a.nombre) || a.nombre;
+  const nuevoFamiliar = prompt('Familiar', a.familiar) || a.familiar;
+  const nuevoGrado = prompt('Grado', a.grado) || a.grado;
+  const nuevoMaestro = prompt('Maestro/a', a.maestro) || a.maestro;
+  await updateDoc(doc(db,'alumnos',id), { nombre: nuevoNombre, familiar: nuevoFamiliar, grado: nuevoGrado, maestro: nuevoMaestro });
+  await mostrarAlumnos();
+  await cargarTabla();
+  await cargarFiltros();
 }
 
 window.abrirModal = async function(id){
@@ -104,11 +128,11 @@ window.guardarPago = async function(){
     const monto = document.getElementById('montoPago').value;
     const alumnoRef = doc(db, 'alumnos', alumnoActual);
     const alumno = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
-    alumno.pagos = alumno.pagos || {}; 
+    alumno.pagos = alumno.pagos || {};
     alumno.pagos[mesSeleccionado] = monto;
     await updateDoc(alumnoRef, { pagos: alumno.pagos });
     await mostrarAlumnos();
-    const actualizado = cacheAlumnos.find(a => a.id === alumnoActual);
+    const actualizado = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
     mostrarPagos(actualizado);
     generarBotonesMes(actualizado);
     document.getElementById('montoPago').value='';
@@ -119,13 +143,35 @@ window.guardarPago = async function(){
   }
 }
 
+// Permite editar/eliminar pagos ya guardados
+window.editarPago = async function(mes){
+  const alumno = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
+  if(!alumno) return;
+  const actual = (alumno.pagos && alumno.pagos[mes]) || '';
+  const nuevo = prompt(`Editar monto para ${mes} (deje vacío para eliminar)`, actual);
+  if(nuevo === null) return; // canceló
+  const alumnoRef = doc(db,'alumnos',alumnoActual);
+  alumno.pagos = alumno.pagos || {};
+  if(nuevo.trim() === ''){
+    delete alumno.pagos[mes];
+  } else {
+    alumno.pagos[mes] = nuevo;
+  }
+  await updateDoc(alumnoRef, { pagos: alumno.pagos });
+  await mostrarAlumnos();
+  const actualizado = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
+  mostrarPagos(actualizado);
+  generarBotonesMes(actualizado);
+  cargarTabla();
+}
+
 function mostrarPagos(alumno){
   const cont = document.getElementById('pagosRegistrados');
   if(!cont) return;
   cont.innerHTML = '';
   for(const mes in (alumno.pagos||{})){
     const div = document.createElement('div');
-    div.textContent = `${mes}: L.${alumno.pagos[mes]}`;
+    div.innerHTML = `${mes}: L.${alumno.pagos[mes]} <button onclick='editarPago("${mes}")'>Editar</button>`;
     cont.appendChild(div);
   }
 }
@@ -134,17 +180,19 @@ function generarBotonesMes(alumno){
   const cont = document.getElementById('mesesContainer');
   if(!cont) return;
   cont.innerHTML = '';
-  for(const mes of ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']){
+  MESES.forEach(mes => {
     const btn = document.createElement('button');
     btn.textContent = mes;
     if(alumno.pagos && alumno.pagos[mes]){
       btn.classList.add('disabled');
       btn.textContent = mes + ' (Pago)';
+      // al hacer click permitir editar también
+      btn.onclick = () => editarPago(mes);
     } else {
       btn.onclick = () => window.seleccionarMes(mes);
     }
     cont.appendChild(btn);
-  }
+  });
 }
 
 // ====== CONSULTA PÚBLICA + FILTROS ======
@@ -181,13 +229,13 @@ window.cargarTabla = async function(){
   alumnosFiltrados.forEach(alumno => {
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${alumno.nombre}</td><td>${alumno.familiar}</td><td>${alumno.grado}</td><td>${alumno.maestro}</td>`;
-    for(const mes of ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']){
+    MESES.forEach(mes => {
       if(alumno.pagos && alumno.pagos[mes]){
         tr.innerHTML += `<td><i class='fa-solid fa-check' style='color:green'></i> L.${alumno.pagos[mes]}</td>`;
       } else {
         tr.innerHTML += `<td><i class='fa-solid fa-xmark' style='color:red'></i></td>`;
       }
-    }
+    });
     tbody.appendChild(tr);
   });
 }
