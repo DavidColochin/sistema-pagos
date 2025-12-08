@@ -2,7 +2,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
-// CONFIG DE FIREBASE (usa tu propio proyecto si lo cambias)
+// TU CONFIG DE FIREBASE (pega la tuya si cambiaste)
 const firebaseConfig = {
   apiKey: "AIzaSyBIUDbk2CJwwtjdzTz0tMiz54_bTYli_U8",
   authDomain: "sistema-pagos-6a8e0.firebaseapp.com",
@@ -22,14 +22,11 @@ let cacheAlumnos = [];
 
 // ====== ADMIN ======
 window.login = function(){
-  const pass = document.getElementById('adminPass')?.value;
+  const pass = document.getElementById('adminPass').value;
   if(pass === adminPassword){
-    const panel = document.getElementById('adminPanel');
-    if(panel) panel.style.display = 'block';
-    const titulo = document.getElementById('tituloAdmin');
-    if(titulo) titulo.style.display = 'none';
-    const loginCont = document.querySelector('.login-container');
-    if(loginCont) loginCont.style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    document.getElementById('tituloAdmin').style.display = 'none';
+    document.querySelector('.login-container').style.display = 'none';
     mostrarAlumnos();
   } else {
     alert('Código incorrecto');
@@ -37,10 +34,10 @@ window.login = function(){
 }
 
 window.registrarAlumno = async function(){
-  const nombre = document.getElementById('nombre')?.value.trim();
-  const familiar = document.getElementById('familiar')?.value.trim();
-  const grado = document.getElementById('grado')?.value.trim();
-  const maestro = document.getElementById('maestro')?.value.trim();
+  const nombre = document.getElementById('nombre').value.trim();
+  const familiar = document.getElementById('familiar').value.trim();
+  const grado = document.getElementById('grado').value.trim();
+  const maestro = document.getElementById('maestro').value.trim();
   if(nombre && familiar && grado && maestro){
     await addDoc(collection(db, 'alumnos'), { nombre, familiar, grado, maestro, pagos: {} });
     document.getElementById('nombre').value='';
@@ -65,11 +62,7 @@ async function mostrarAlumnos(){
   querySnapshot.forEach(docSnap => { cacheAlumnos.push({ id: docSnap.id, ...docSnap.data() }); });
   cacheAlumnos.forEach((alumno) => {
     const li = document.createElement('li');
-    li.innerHTML = `${alumno.nombre} - ${alumno.grado} 
-      <span>
-        <button onclick="abrirModal('${alumno.id}')">Pago</button>
-        <button onclick="eliminarAlumno('${alumno.id}')">Eliminar</button>
-      </span>`;
+    li.innerHTML = `${alumno.nombre} - ${alumno.grado} <div><button onclick='abrirModal("${alumno.id}")'>+ Pago</button><button onclick='eliminarAlumno("${alumno.id}")' style='background:red;'>Eliminar</button></div>`;
     lista.appendChild(li);
   });
   if(contador) contador.textContent = `Total alumnos: ${cacheAlumnos.length}`;
@@ -87,11 +80,10 @@ window.eliminarAlumno = async function(id){
 window.abrirModal = async function(id){
   alumnoActual = id;
   const alumno = cacheAlumnos.find(a => a.id === id) || (await fetchAlumno(id));
-  document.getElementById('alumnoSeleccionado')?.setAttribute('data-name', alumno?.nombre || '');
+  document.getElementById('alumnoSeleccionado').textContent = alumno.nombre;
   mostrarPagos(alumno);
   generarBotonesMes(alumno);
-  const modal = document.getElementById('modalPago');
-  if(modal) modal.style.display = 'flex';
+  document.getElementById('modalPago').style.display = 'flex';
 }
 
 async function fetchAlumno(id){
@@ -102,18 +94,17 @@ async function fetchAlumno(id){
 }
 
 window.cerrarModal = function(){
-  const modal = document.getElementById('modalPago');
-  if(modal) modal.style.display = 'none';
+  document.getElementById('modalPago').style.display = 'none';
 }
 
 window.seleccionarMes = function(mes){ mesSeleccionado = mes; }
 
 window.guardarPago = async function(){
-  if(mesSeleccionado && document.getElementById('montoPago')?.value){
+  if(mesSeleccionado && document.getElementById('montoPago').value){
     const monto = document.getElementById('montoPago').value;
     const alumnoRef = doc(db, 'alumnos', alumnoActual);
     const alumno = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
-    alumno.pagos = alumno.pagos || {};
+    alumno.pagos = alumno.pagos || {}; 
     alumno.pagos[mesSeleccionado] = monto;
     await updateDoc(alumnoRef, { pagos: alumno.pagos });
     await mostrarAlumnos();
@@ -130,19 +121,18 @@ window.guardarPago = async function(){
 
 function mostrarPagos(alumno){
   const cont = document.getElementById('pagosRegistrados');
-  if(!cont || !alumno) return;
+  if(!cont) return;
   cont.innerHTML = '';
-  const pagos = alumno.pagos || {};
-  for(const mes of Object.keys(pagos)){
+  for(const mes in (alumno.pagos||{})){
     const div = document.createElement('div');
-    div.textContent = `${mes}: L.${pagos[mes]}`;
+    div.textContent = `${mes}: L.${alumno.pagos[mes]}`;
     cont.appendChild(div);
   }
 }
 
 function generarBotonesMes(alumno){
   const cont = document.getElementById('mesesContainer');
-  if(!cont || !alumno) return;
+  if(!cont) return;
   cont.innerHTML = '';
   for(const mes of ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']){
     const btn = document.createElement('button');
@@ -167,80 +157,43 @@ async function cargarTodos(){
 window.cargarFiltros = async function(){
   const gradoSel = document.getElementById('filtroGrado');
   const maestroSel = document.getElementById('filtroMaestro');
-  if(!gradoSel || !maestroSel) return;
-
+  if(!gradoSel || !maestroSel) return; 
   await cargarTodos();
-
-  const grados = Array.from(new Set(cacheAlumnos.map(a => (a.grado || '').trim()))).filter(g=>g);
-  const maestros = Array.from(new Set(cacheAlumnos.map(a => (a.maestro || '').trim()))).filter(m=>m);
-
-  gradoSel.innerHTML = '';
-  maestroSel.innerHTML = '';
-
-  const optTodosGrado = document.createElement('option');
-  optTodosGrado.value = 'Todos';
-  optTodosGrado.textContent = 'Todos';
-  gradoSel.appendChild(optTodosGrado);
-
-  const optTodosMaestro = document.createElement('option');
-  optTodosMaestro.value = 'Todos';
-  optTodosMaestro.textContent = 'Todos';
-  maestroSel.appendChild(optTodosMaestro);
-
-  grados.forEach(g => { const opt = document.createElement('option'); opt.value = g; opt.textContent = g; gradoSel.appendChild(opt); });
-  maestros.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.textContent = m; maestroSel.appendChild(opt); });
-
-  gradoSel.value = 'Todos';
-  maestroSel.value = 'Todos';
+  const grados = Array.from(new Set(cacheAlumnos.map(a => (a.grado||'').trim()))).filter(g=>g);
+  const maestros = Array.from(new Set(cacheAlumnos.map(a => (a.maestro||'').trim()))).filter(m=>m);
+  gradoSel.innerHTML = '<option value="Todos">Todos</option>' + grados.map(g=>`<option>${g}</option>`).join('');
+  maestroSel.innerHTML = '<option value="Todos">Todos</option>' + maestros.map(m=>`<option>${m}</option>`).join('');
 }
 
 window.cargarTabla = async function(){
   const tbody = document.querySelector('#tablaPagos tbody');
   if(!tbody) return;
   await cargarTodos();
-
   const gradoSel = document.getElementById('filtroGrado');
   const maestroSel = document.getElementById('filtroMaestro');
   const gradoFiltro = gradoSel ? gradoSel.value : 'Todos';
   const maestroFiltro = maestroSel ? maestroSel.value : 'Todos';
-
   const alumnosFiltrados = cacheAlumnos.filter(a =>
     (gradoFiltro==='Todos' || a.grado===gradoFiltro) &&
     (maestroFiltro==='Todos' || a.maestro===maestroFiltro)
   );
-
   tbody.innerHTML = '';
   alumnosFiltrados.forEach(alumno => {
     const tr = document.createElement('tr');
-
-    tr.innerHTML = `
-      <td>${alumno.nombre || ''}</td>
-      <td>${alumno.familiar || ''}</td>
-      <td>${alumno.grado || ''}</td>
-      <td>${alumno.maestro || ''}</td>
-    `;
-
+    tr.innerHTML = `<td>${alumno.nombre}</td><td>${alumno.familiar}</td><td>${alumno.grado}</td><td>${alumno.maestro}</td>`;
     for(const mes of ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']){
-      const td = document.createElement('td');
-      if(alumno.pagos && alumno.pagos[mes]){ td.textContent = `L.${alumno.pagos[mes]}`; } else { td.textContent = ''; }
-      tr.appendChild(td);
+      if(alumno.pagos && alumno.pagos[mes]){
+        tr.innerHTML += `<td><i class='fa-solid fa-check' style='color:green'></i> L.${alumno.pagos[mes]}</td>`;
+      } else {
+        tr.innerHTML += `<td><i class='fa-solid fa-xmark' style='color:red'></i></td>`;
+      }
     }
-
     tbody.appendChild(tr);
   });
 }
 
-// Botón Deshacer filtros
-window.resetFiltros = function(){
-  const gradoSel = document.getElementById('filtroGrado');
-  const maestroSel = document.getElementById('filtroMaestro');
-  if(gradoSel) gradoSel.value = 'Todos';
-  if(maestroSel) maestroSel.value = 'Todos';
-  cargarTabla();
-}
-
 // Eventos de filtros
-window.addEventListener('DOMContentLoaded', async () => {
+window.addEventListener('DOMContentLoaded', async ()=>{
   await cargarFiltros();
   await cargarTabla();
   const gradoSel = document.getElementById('filtroGrado');
