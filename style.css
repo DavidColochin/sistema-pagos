@@ -1,3 +1,4 @@
+
 body { font-family: Arial, sans-serif; background:#f4f6f9; margin:0; }
 header { background:#0d6efd; color:#fff; padding:15px; text-align:center; position:relative; }
 header .btn-back { position:absolute; left:15px; top:15px; background:#fff; color:#0d6efd; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; }
@@ -25,3 +26,8 @@ th, td { padding:10px; text-align:center; border-bottom:1px solid #ddd; }
 th { background:#0d6efd; color:#fff; }
 .filters { display:flex; gap:15px; align-items:center; justify-content:center; margin:10px auto; }
 .filters select { padding:8px; border-radius:6px; border:1px solid #ccc; }
+#btnResetFiltros { margin-left: 10px; }
+
+/* Indicadores mínimos para selección y meses con pago */
+#mesesContainer button.selected { outline: 2px solid #0d6efd; box-shadow: 0 0 0 2px rgba(13,110,253,0.2); }
+#mesesContainer button.hasPago { background: #e9f5ff; color: #0d6efd; }
