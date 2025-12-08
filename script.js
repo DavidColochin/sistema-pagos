@@ -2,7 +2,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
-// TU CONFIG DE FIREBASE (pega la tuya si cambiaste)
 const firebaseConfig = {
   apiKey: "AIzaSyBIUDbk2CJwwtjdzTz0tMiz54_bTYli_U8",
   authDomain: "sistema-pagos-6a8e0.firebaseapp.com",
@@ -25,12 +24,10 @@ window.login = function(){
   const pass = document.getElementById('adminPass').value;
   if(pass === adminPassword){
     document.getElementById('adminPanel').style.display = 'block';
-    document.getElementById('tituloAdmin').style.display = 'none';
-    document.querySelector('.login-container').style.display = 'none';
+    const title = document.getElementById('tituloAdmin'); if(title) title.style.display='none';
+    const loginBox = document.querySelector('.login-container'); if(loginBox) loginBox.style.display='none';
     mostrarAlumnos();
-  } else {
-    alert('Código incorrecto');
-  }
+  } else { alert('Código incorrecto'); }
 }
 
 window.registrarAlumno = async function(){
@@ -44,12 +41,10 @@ window.registrarAlumno = async function(){
     document.getElementById('familiar').value='';
     document.getElementById('grado').value='';
     document.getElementById('maestro').value='';
-    mostrarAlumnos();
-    cargarTabla();
-    cargarFiltros();
-  } else {
-    alert('Complete todos los campos');
-  }
+    await mostrarAlumnos();
+    await cargarFiltros();
+    await cargarTabla();
+  } else { alert('Complete todos los campos'); }
 }
 
 async function mostrarAlumnos(){
@@ -57,10 +52,10 @@ async function mostrarAlumnos(){
   const contador = document.getElementById('contador');
   if(!lista) return;
   lista.innerHTML = '';
-  const querySnapshot = await getDocs(collection(db, 'alumnos'));
+  const qs = await getDocs(collection(db, 'alumnos'));
   cacheAlumnos = [];
-  querySnapshot.forEach(docSnap => { cacheAlumnos.push({ id: docSnap.id, ...docSnap.data() }); });
-  cacheAlumnos.forEach((alumno) => {
+  qs.forEach(docSnap => cacheAlumnos.push({ id: docSnap.id, ...docSnap.data() }));
+  cacheAlumnos.forEach(alumno => {
     const li = document.createElement('li');
     li.innerHTML = `${alumno.nombre} - ${alumno.grado} <div><button onclick='abrirModal("${alumno.id}")'>+ Pago</button><button onclick='eliminarAlumno("${alumno.id}")' style='background:red;'>Eliminar</button></div>`;
     lista.appendChild(li);
@@ -70,129 +65,108 @@ async function mostrarAlumnos(){
 
 window.eliminarAlumno = async function(id){
   if(confirm('¿Eliminar este alumno?')){
-    await deleteDoc(doc(db, 'alumnos', id));
-    mostrarAlumnos();
-    cargarTabla();
-    cargarFiltros();
+    await deleteDoc(doc(db,'alumnos',id));
+    await mostrarAlumnos();
+    await cargarFiltros();
+    await cargarTabla();
   }
 }
 
 window.abrirModal = async function(id){
   alumnoActual = id;
-  const alumno = cacheAlumnos.find(a => a.id === id) || (await fetchAlumno(id));
-  document.getElementById('alumnoSeleccionado').textContent = alumno.nombre;
+  const alumno = cacheAlumnos.find(a=>a.id===id) || (await fetchAlumno(id));
+  const p = document.getElementById('alumnoSeleccionado'); if(p) p.textContent = alumno.nombre;
   mostrarPagos(alumno);
   generarBotonesMes(alumno);
-  document.getElementById('modalPago').style.display = 'flex';
+  const modal = document.getElementById('modalPago'); if(modal) modal.style.display='flex';
 }
 
 async function fetchAlumno(id){
-  const qs = await getDocs(collection(db, 'alumnos'));
-  let found = null;
-  qs.forEach(d => { if(d.id === id) found = { id: d.id, ...d.data() }; });
+  const qs = await getDocs(collection(db,'alumnos'));
+  let found=null; qs.forEach(d=>{ if(d.id===id) found={ id:d.id, ...d.data() }; });
   return found;
 }
 
-window.cerrarModal = function(){
-  document.getElementById('modalPago').style.display = 'none';
-}
-
-window.seleccionarMes = function(mes){ mesSeleccionado = mes; }
+window.cerrarModal = function(){ const m=document.getElementById('modalPago'); if(m) m.style.display='none'; }
+window.seleccionarMes = function(m){ mesSeleccionado=m; }
 
 window.guardarPago = async function(){
-  if(mesSeleccionado && document.getElementById('montoPago').value){
-    const monto = document.getElementById('montoPago').value;
-    const alumnoRef = doc(db, 'alumnos', alumnoActual);
-    const alumno = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
-    alumno.pagos = alumno.pagos || {}; 
-    alumno.pagos[mesSeleccionado] = monto;
-    await updateDoc(alumnoRef, { pagos: alumno.pagos });
+  const input = document.getElementById('montoPago');
+  if(mesSeleccionado && input && input.value){
+    const monto = input.value;
+    const ref = doc(db,'alumnos',alumnoActual);
+    const alumno = cacheAlumnos.find(a=>a.id===alumnoActual) || (await fetchAlumno(alumnoActual));
+    alumno.pagos = alumno.pagos || {}; alumno.pagos[mesSeleccionado] = monto;
+    await updateDoc(ref,{ pagos: alumno.pagos });
     await mostrarAlumnos();
-    const actualizado = cacheAlumnos.find(a => a.id === alumnoActual);
-    mostrarPagos(actualizado);
-    generarBotonesMes(actualizado);
-    document.getElementById('montoPago').value='';
-    mesSeleccionado=null;
-    cargarTabla();
-  } else {
-    alert('Seleccione mes y monto');
-  }
+    const actualizado = cacheAlumnos.find(a=>a.id===alumnoActual);
+    mostrarPagos(actualizado); generarBotonesMes(actualizado);
+    input.value=''; mesSeleccionado=null; await cargarTabla();
+  } else { alert('Seleccione mes y monto'); }
 }
 
 function mostrarPagos(alumno){
-  const cont = document.getElementById('pagosRegistrados');
-  if(!cont) return;
-  cont.innerHTML = '';
+  const cont = document.getElementById('pagosRegistrados'); if(!cont) return;
+  cont.innerHTML='';
   for(const mes in (alumno.pagos||{})){
     const div = document.createElement('div');
-    div.textContent = `${mes}: L.${alumno.pagos[mes]}`;
-    cont.appendChild(div);
+    div.textContent = `${mes}: L.${alumno.pagos[mes]}`; cont.appendChild(div);
   }
 }
 
 function generarBotonesMes(alumno){
-  const cont = document.getElementById('mesesContainer');
-  if(!cont) return;
-  cont.innerHTML = '';
+  const cont = document.getElementById('mesesContainer'); if(!cont) return;
+  cont.innerHTML='';
   for(const mes of ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']){
-    const btn = document.createElement('button');
-    btn.textContent = mes;
-    if(alumno.pagos && alumno.pagos[mes]){
-      btn.classList.add('disabled');
-      btn.textContent = mes + ' (Pago)';
-    } else {
-      btn.onclick = () => window.seleccionarMes(mes);
-    }
+    const btn = document.createElement('button'); btn.textContent = mes;
+    if(alumno.pagos && alumno.pagos[mes]){ btn.classList.add('disabled'); btn.textContent = mes+' (Pago)'; }
+    else { btn.onclick = ()=> window.seleccionarMes(mes); }
     cont.appendChild(btn);
   }
 }
 
-// ====== CONSULTA PÚBLICA + FILTROS ======
+// ====== CONSULTA: filtros ======
 async function cargarTodos(){
-  const qs = await getDocs(collection(db, 'alumnos'));
-  cacheAlumnos = [];
-  qs.forEach(docSnap => { cacheAlumnos.push({ id: docSnap.id, ...docSnap.data() }); });
+  const qs = await getDocs(collection(db,'alumnos'));
+  cacheAlumnos = []; qs.forEach(docSnap=>cacheAlumnos.push({ id:docSnap.id, ...docSnap.data() }));
 }
 
 window.cargarFiltros = async function(){
   const gradoSel = document.getElementById('filtroGrado');
   const maestroSel = document.getElementById('filtroMaestro');
-  if(!gradoSel || !maestroSel) return; 
   await cargarTodos();
-  const grados = Array.from(new Set(cacheAlumnos.map(a => (a.grado||'').trim()))).filter(g=>g);
-  const maestros = Array.from(new Set(cacheAlumnos.map(a => (a.maestro||'').trim()))).filter(m=>m);
-  gradoSel.innerHTML = '<option value="Todos">Todos</option>' + grados.map(g=>`<option>${g}</option>`).join('');
-  maestroSel.innerHTML = '<option value="Todos">Todos</option>' + maestros.map(m=>`<option>${m}</option>`).join('');
+  if(gradoSel){
+    const grados = Array.from(new Set(cacheAlumnos.map(a=> (a.grado||'').trim()))).filter(Boolean);
+    gradoSel.innerHTML = '<option value="Todos">Todos</option>' + grados.map(g=>`<option>${g}</option>`).join('');
+  }
+  if(maestroSel){
+    const maestros = Array.from(new Set(cacheAlumnos.map(a=> (a.maestro||'').trim()))).filter(Boolean);
+    maestroSel.innerHTML = '<option value="Todos">Todos</option>' + maestros.map(m=>`<option>${m}</option>`).join('');
+  }
 }
 
 window.cargarTabla = async function(){
-  const tbody = document.querySelector('#tablaPagos tbody');
-  if(!tbody) return;
-  await cargarTodos();
+  const tbody = document.querySelector('#tablaPagos tbody'); if(!tbody) return;
   const gradoSel = document.getElementById('filtroGrado');
   const maestroSel = document.getElementById('filtroMaestro');
+  await cargarTodos();
   const gradoFiltro = gradoSel ? gradoSel.value : 'Todos';
   const maestroFiltro = maestroSel ? maestroSel.value : 'Todos';
-  const alumnosFiltrados = cacheAlumnos.filter(a =>
-    (gradoFiltro==='Todos' || a.grado===gradoFiltro) &&
-    (maestroFiltro==='Todos' || a.maestro===maestroFiltro)
-  );
-  tbody.innerHTML = '';
-  alumnosFiltrados.forEach(alumno => {
+  const alumnosFiltrados = cacheAlumnos.filter(a=> (gradoFiltro==='Todos'||a.grado===gradoFiltro) && (maestroFiltro==='Todos'||a.maestro===maestroFiltro));
+  tbody.innerHTML='';
+  alumnosFiltrados.forEach(alumno=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${alumno.nombre}</td><td>${alumno.familiar}</td><td>${alumno.grado}</td><td>${alumno.maestro}</td>`;
     for(const mes of ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']){
-      if(alumno.pagos && alumno.pagos[mes]){
-        tr.innerHTML += `<td><i class='fa-solid fa-check' style='color:green'></i> L.${alumno.pagos[mes]}</td>`;
-      } else {
-        tr.innerHTML += `<td><i class='fa-solid fa-xmark' style='color:red'></i></td>`;
-      }
+      tr.innerHTML += alumno.pagos && alumno.pagos[mes]
+        ? `<td><i class='fa-solid fa-check' style='color:green'></i> L.${alumno.pagos[mes]}</td>`
+        : `<td><i class='fa-solid fa-xmark' style='color:red'></i></td>`;
     }
     tbody.appendChild(tr);
   });
 }
 
-// Eventos de filtros
+// Attach events
 window.addEventListener('DOMContentLoaded', async ()=>{
   await cargarFiltros();
   await cargarTabla();
