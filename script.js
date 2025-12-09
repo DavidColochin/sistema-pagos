@@ -327,3 +327,14 @@ window.addEventListener('DOMContentLoaded', async ()=>{
   if(gradoSel) gradoSel.addEventListener('change', cargarTabla);
   if(maestroSel) maestroSel.addEventListener('change', cargarTabla);
 });
+.estado-x {
+    color: #dc3545 !important;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.estado-check {
+    color: #28a745 !important;
+    font-weight: bold;
+    font-size: 20px;
+}
