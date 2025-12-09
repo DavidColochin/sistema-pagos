@@ -252,7 +252,7 @@ function generarBotonesMes(alumno){
 
     // si ya tiene pago, dejamos la posibilidad de "Editar": marcado con texto (pero no bloqueado)
     if(alumno.pagos && alumno.pagos[mes]){
-      btn.textContent = `${mes} (Editar)`;
+      btn.textContent = `${mes} (Pagado)`;
     }
 
     // siempre se puede seleccionar para editar o registrar
