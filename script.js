@@ -24,7 +24,7 @@ let alumnoActual = null;
 let mesSeleccionado = null;
 let cacheAlumnos = [];
 
-// SOLO MESES VÁLIDOS
+// SOLO MESES VÁLIDOS (Feb → Nov)
 const MESES_VALIDOS = ['Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov'];
 
 // =======================
@@ -34,9 +34,16 @@ window.login = function(){
   const pass = document.getElementById('adminPass').value;
   if(pass === adminPassword){
     document.getElementById('adminPanel').style.display = 'block';
-    document.getElementById('tituloAdmin').style.display = 'none';
-    document.querySelector('.login-container').style.display = 'none';
+    // si existe un titulo de acceso (en otras versiones), ocultarlo
+    const titulo = document.getElementById('tituloAdmin');
+    if(titulo) titulo.style.display = 'none';
+    // ocultar la parte de login
+    const loginContainer = document.querySelector('.login-container');
+    if(loginContainer) loginContainer.style.display = 'none';
+    // mostrar lista/controles
     mostrarAlumnos();
+    cargarFiltros();
+    cargarTabla();
   } else {
     alert('Código incorrecto');
   }
@@ -59,9 +66,9 @@ window.registrarAlumno = async function(){
     document.getElementById('grado').value='';
     document.getElementById('maestro').value='';
 
-    mostrarAlumnos();
-    cargarTabla();
-    cargarFiltros();
+    await mostrarAlumnos();
+    await cargarTabla();
+    await cargarFiltros();
 
   } else {
     alert('Complete todos los campos');
@@ -104,9 +111,9 @@ async function mostrarAlumnos(){
 window.eliminarAlumno = async function(id){
   if(confirm('¿Eliminar este alumno?')){
     await deleteDoc(doc(db, 'alumnos', id));
-    mostrarAlumnos();
-    cargarTabla();
-    cargarFiltros();
+    await mostrarAlumnos();
+    await cargarTabla();
+    await cargarFiltros();
   }
 };
 
@@ -117,14 +124,27 @@ window.abrirModal = async function(id){
   alumnoActual = id;
   const alumno = cacheAlumnos.find(a => a.id === id) || (await fetchAlumno(id));
 
-  document.getElementById('alumnoSeleccionado').textContent = alumno.nombre;
+  // mostrar nombre
+  const nombreElem = document.getElementById('alumnoSeleccionado');
+  if(nombreElem) nombreElem.textContent = alumno.nombre || '';
 
+  // mostrar pagos existentes
   mostrarPagos(alumno);
+
+  // generar botones de meses (Feb->Nov)
   generarBotonesMes(alumno);
 
-  document.getElementById('modalPago').style.display = 'flex';
+  // limpiar selección previa
+  mesSeleccionado = null;
+  const montoInput = document.getElementById('montoPago');
+  if(montoInput) montoInput.value = '';
+
+  // abrir modal
+  const modal = document.getElementById('modalPago');
+  if(modal) modal.style.display = 'flex';
 };
 
+// helper para traer un alumno individual (por si no está en cache)
 async function fetchAlumno(id){
   const qs = await getDocs(collection(db, 'alumnos'));
   let found = null;
@@ -133,65 +153,87 @@ async function fetchAlumno(id){
 }
 
 window.cerrarModal = function(){
-  document.getElementById('modalPago').style.display = 'none';
+  const modal = document.getElementById('modalPago');
+  if(modal) modal.style.display = 'none';
   mesSeleccionado = null;
+  // quitar selección visual
+  document.querySelectorAll('#mesesContainer button').forEach(b => b.classList.remove('selected'));
 };
 
 // =======================
 //  SELECCIONAR MES
 // =======================
-window.seleccionarMes = function(mes){ 
+window.seleccionarMes = function(mes){
   mesSeleccionado = mes;
 
-  // Marcar visualmente
+  // Marcar visualmente: quitar selected a todos y poner en el elegido
   document.querySelectorAll('#mesesContainer button').forEach(b => b.classList.remove('selected'));
-  document.getElementById(`mes_${mes}`).classList.add('selected');
+  const boton = document.getElementById(`mes_${mes}`);
+  if(boton) boton.classList.add('selected');
+
+  // Si ya existe pago para ese mes, cargar el monto para editar
+  const alumno = cacheAlumnos.find(a => a.id === alumnoActual);
+  const montoInput = document.getElementById('montoPago');
+  if(alumno && alumno.pagos && alumno.pagos[mes]){
+    if(montoInput) montoInput.value = alumno.pagos[mes];
+  } else {
+    if(montoInput) montoInput.value = '';
+  }
 };
 
 // =======================
 //  GUARDAR / EDITAR PAGO
 // =======================
 window.guardarPago = async function(){
-  if(mesSeleccionado && document.getElementById('montoPago').value){
-    const monto = document.getElementById('montoPago').value;
+  const montoInput = document.getElementById('montoPago');
+  const montoVal = montoInput ? montoInput.value.trim() : '';
 
-    const alumnoRef = doc(db, 'alumnos', alumnoActual);
-    const alumno = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
-
-    alumno.pagos = alumno.pagos || {}; 
-    alumno.pagos[mesSeleccionado] = monto; // EDITA O CREA
-
-    await updateDoc(alumnoRef, { pagos: alumno.pagos });
-
-    await mostrarAlumnos();
-
-    const actualizado = cacheAlumnos.find(a => a.id === alumnoActual);
-    mostrarPagos(actualizado);
-    generarBotonesMes(actualizado);
-
-    document.getElementById('montoPago').value='';
-    mesSeleccionado=null;
-
-    cargarTabla();
-  } else {
+  if(!mesSeleccionado || !montoVal){
     alert('Seleccione mes y monto');
+    return;
   }
+
+  const monto = montoVal;
+  const alumnoRef = doc(db, 'alumnos', alumnoActual);
+  const alumno = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
+
+  alumno.pagos = alumno.pagos || {};
+  alumno.pagos[mesSeleccionado] = monto; // crea o edita
+
+  await updateDoc(alumnoRef, { pagos: alumno.pagos });
+
+  // actualizar cache local: re-cargar lista y tabla
+  await mostrarAlumnos();
+  await cargarTabla();
+  await cargarFiltros();
+
+  // recargar datos del alumno actual y refrescar modal
+  const actualizado = cacheAlumnos.find(a => a.id === alumnoActual) || (await fetchAlumno(alumnoActual));
+  mostrarPagos(actualizado);
+  generarBotonesMes(actualizado);
+
+  // dejar input limpio y mantener la selección visual (puedes cambiar si quieres limpiar)
+  if(montoInput) montoInput.value = '';
+  mesSeleccionado = null;
+  document.querySelectorAll('#mesesContainer button').forEach(b => b.classList.remove('selected'));
 };
 
 // =======================
-//  MOSTRAR PAGOS EXISTENTES
+//  MOSTRAR PAGOS EXISTENTES (en modal)
 // =======================
 function mostrarPagos(alumno){
   const cont = document.getElementById('pagosRegistrados');
   if(!cont) return;
 
   cont.innerHTML = '';
-
-  for(const mes in (alumno.pagos||{})){
-    const div = document.createElement('div');
-    div.textContent = `${mes}: L.${alumno.pagos[mes]}`;
-    cont.appendChild(div);
-  }
+  // Mostrar en orden de MESES_VALIDOS solo
+  MESES_VALIDOS.forEach(mes => {
+    if(alumno.pagos && alumno.pagos[mes]){
+      const div = document.createElement('div');
+      div.textContent = `${mes}: L.${alumno.pagos[mes]}`;
+      cont.appendChild(div);
+    }
+  });
 }
 
 // =======================
@@ -208,19 +250,20 @@ function generarBotonesMes(alumno){
     btn.id = `mes_${mes}`;
     btn.textContent = mes;
 
+    // si ya tiene pago, dejamos la posibilidad de "Editar": marcado con texto (pero no bloqueado)
     if(alumno.pagos && alumno.pagos[mes]){
       btn.textContent = `${mes} (Editar)`;
-      btn.onclick = () => window.seleccionarMes(mes);
-    } else {
-      btn.onclick = () => window.seleccionarMes(mes);
     }
+
+    // siempre se puede seleccionar para editar o registrar
+    btn.onclick = () => window.seleccionarMes(mes);
 
     cont.appendChild(btn);
   });
 }
 
 // =======================
-//  CONSULTA / FILTROS
+//  CONSULTA / FILTROS / TABLA
 // =======================
 async function cargarTodos(){
   const qs = await getDocs(collection(db, 'alumnos'));
@@ -284,6 +327,7 @@ window.cargarTabla = async function(){
 };
 
 window.addEventListener('DOMContentLoaded', async ()=>{
+  // cargar filtros y tabla si se abre desde consulta.html o admin (si se ha logueado)
   await cargarFiltros();
   await cargarTabla();
 
@@ -292,4 +336,13 @@ window.addEventListener('DOMContentLoaded', async ()=>{
 
   if(gradoSel) gradoSel.addEventListener('change', cargarTabla);
   if(maestroSel) maestroSel.addEventListener('change', cargarTabla);
+
+  // cerrar modal al hacer click fuera del contenido
+  document.addEventListener('click', (e) => {
+    const modal = document.getElementById('modalPago');
+    if(!modal) return;
+    if(modal.style.display === 'flex' && e.target === modal){
+      cerrarModal();
+    }
+  });
 });
