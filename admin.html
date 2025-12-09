@@ -10,41 +10,53 @@
 </head>
 <body>
 <header>
-    <h1 id='tituloAdmin'><i class='fa-solid fa-user-shield'></i> Acceso Administrador</h1>
+    <button onclick="window.location.href='index.html'" class='btn-back'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
+    <h1><i class='fa-solid fa-user-shield'></i> Administración</h1>
 </header>
-<div class='container'>
-    <div class='login-container vertical'>
-        <input type='password' id='adminPass' placeholder='Ingrese código'>
-        <div class='login-actions'>
-            <button onclick="window.location.href='index.html'" class='btn-back inline'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
-            <button onclick='login()' class='btn inline'>Ingresar</button>
-        </div>
-    </div>
-    <div id='adminPanel' style='display:none;'>
-        <h2><i class='fa-solid fa-user-plus'></i> Registrar Nuevo Alumno</h2>
-        <input type='text' id='nombre' placeholder='Nombre del Alumno'>
-        <input type='text' id='familiar' placeholder='Familiar del Alumno'>
-        <input type='text' id='grado' placeholder='Grado'>
-        <input type='text' id='maestro' placeholder='Maestro/a'>
-        <button onclick='registrarAlumno()' class='btn green'>Registrar Alumno</button>
-        <p id='contador'></p>
-        <h3><i class='fa-solid fa-users'></i> Alumnos Registrados</h3>
-        <ul id='listaAlumnos'></ul>
-    </div>
+
+<div class='login-container vertical'>
+    <input type='text' id='adminUser' placeholder='Usuario'>
+    <input type='password' id='adminPass' placeholder='Contraseña'>
+    <button id='btnLogin' class='btn'>Ingresar</button>
 </div>
 
-<!-- Modal para pagos -->
-<div id='modalPago' class='modal'>
+<div id='adminPanel' style='display:none;'>
+
+    <div class='login-actions'>
+        <button id='btnAgregarAlumno' class='btn green'>Agregar Alumno</button>
+        <button id='btnVerAlumnos' class='btn'>Ver Alumnos</button>
+    </div>
+
+    <ul id='listaAlumnos'></ul>
+</div>
+
+<!-- === MODAL PAGOS === -->
+<div id='modalPagos' class='modal'>
     <div class='modal-content'>
-        <span class='close' onclick='cerrarModal()'>&times;</span>
-        <h2>Registrar Pago</h2>
-        <p id='alumnoSeleccionado'></p>
-        <div id='pagosRegistrados'></div>
-        <input type='number' id='montoPago' placeholder='Monto (Lps)'>
-        <div class='meses' id='mesesContainer'></div>
-        <div style='text-align:center;'>
-            <button onclick='guardarPago()' class='btn green'>Guardar Pago</button>
+        <span id='cerrarModalPagos' class='close'>&times;</span>
+        <h3>Registrar / Editar Pagos</h3>
+
+        <p><strong id='nombreAlumnoPago'></strong></p>
+
+        <label>Monto a pagar:</label>
+        <input type='number' id='montoPago' placeholder='Ej: 50'>
+
+        <label>Mes a pagar:</label>
+        <div class='meses'>
+            <!-- SOLO FEB → NOV -->
+            <button data-mes='feb'>Febrero</button>
+            <button data-mes='mar'>Marzo</button>
+            <button data-mes='abr'>Abril</button>
+            <button data-mes='may'>Mayo</button>
+            <button data-mes='jun'>Junio</button>
+            <button data-mes='jul'>Julio</button>
+            <button data-mes='ago'>Agosto</button>
+            <button data-mes='sep'>Septiembre</button>
+            <button data-mes='oct'>Octubre</button>
+            <button data-mes='nov'>Noviembre</button>
         </div>
+
+        <button id='btnGuardarPago' class='btn green'>Guardar Pago</button>
     </div>
 </div>
 

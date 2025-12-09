@@ -13,17 +13,21 @@
     <button onclick="window.location.href='index.html'" class='btn-back'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
     <h1><i class='fa-solid fa-eye'></i> Estado de Pagos</h1>
 </header>
+
 <div class='container'>
+
     <div class='filters'>
         <div>
             <label for='filtroGrado'><i class='fa-solid fa-layer-group'></i> Grado:</label>
             <select id='filtroGrado'></select>
         </div>
+
         <div>
             <label for='filtroMaestro'><i class='fa-solid fa-chalkboard-user'></i> Maestro/a:</label>
             <select id='filtroMaestro'></select>
         </div>
     </div>
+
     <table id='tablaPagos'>
         <thead>
             <tr>
@@ -31,11 +35,16 @@
                 <th>Familiar</th>
                 <th>Grado</th>
                 <th>Maestro/a</th>
-                <th>Ene</th><th>Feb</th><th>Mar</th><th>Abr</th><th>May</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dic</th>
+
+                <!-- SOLO FEB → NOV -->
+                <th>Feb</th><th>Mar</th><th>Abr</th><th>May</th>
+                <th>Jun</th><th>Jul</th><th>Ago</th><th>Sep</th>
+                <th>Oct</th><th>Nov</th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
+
 </div>
 </body>
 </html>
