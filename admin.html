@@ -21,20 +21,30 @@
             <button onclick="login()" class="btn inline">Ingresar</button>
         </div>
     </div>
+   
+<div id="adminPanel" style="display:none;">
+    <h2><i class="fa-solid fa-user-plus"></i> Registrar Nuevo Alumno</h2>
+    <input type="text" id="nombre" placeholder="Nombre del Alumno">
+    <input type="text" id="familiar" placeholder="Familiar del Alumno">
+    <input type="text" id="grado" placeholder="Grado">
+    <input type="text" id="maestro" placeholder="Maestro/a">
 
-    <div id="adminPanel" style="display:none;">
-        <h2><i class="fa-solid fa-user-plus"></i> Registrar Nuevo Alumno</h2>
-        <input type="text" id="nombre" placeholder="Nombre del Alumno">
-        <input type="text" id="familiar" placeholder="Familiar del Alumno">
-        <input type="text" id="grado" placeholder="Grado">
-        <input type="text" id="maestro" placeholder="Maestro/a">
-        <button onclick="registrarAlumno()" class="btn green">Registrar Alumno</button>
-        <p id="contador"></p>
-
-        <h3><i class="fa-solid fa-users"></i> Alumnos Registrados</h3>
-        <ul id="listaAlumnos"></ul>
+    <!-- Botones: Registrar Alumno + Home -->
+    <div style="margin-top:10px;">
+        <button onclick="registrarAlumno()" class="btn green">
+            <i class="fa-solid fa-user-plus"></i> Registrar Alumno
+        </button>
+        index.html
+            <i class="fa-solid fa-house"></i> Home
+        </button>
     </div>
+
+    <p id="contador"></p>
+
+    <h3><i class="fa-solid fa-users"></i> Alumnos Registrados</h3>
+    <ul id="listaAlumnos"></ul>
 </div>
+
 
 <!-- Modal para pagos -->
 <div id="modalPago" class="modal">

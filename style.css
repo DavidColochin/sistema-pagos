@@ -35,3 +35,13 @@ th { background:#0d6efd; color:#fff; }
   th, td { font-size:12px; padding:8px; }
   .modal-content { width:92%; padding:12px; }
 }
+
+.btn.home {
+    background: #f4f4f5;
+    color: #111827;
+    border: 1px solid #e5e7eb;
+}
+
+.btn.home:hover {
+    background: #e5e7eb;
+}
