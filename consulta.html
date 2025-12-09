@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang='es'>
+<html lang="es">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Consulta Pública</title>
-<link rel='stylesheet' href='style.css'>
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
-<script type='module' src='script.js'></script>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module" src="script.js"></script>
 </head>
 <body>
 <header>
-    <button onclick="window.location.href='index.html'" class='btn-back'><i class='fa-solid fa-arrow-left'></i> Inicio</button>
-    <h1><i class='fa-solid fa-eye'></i> Estado de Pagos</h1>
+    <button id="btnInicioConsulta" class="btn-back"><i class="fa-solid fa-house"></i> Inicio</button>
+    <h1><i class="fa-solid fa-eye"></i> Estado de Pagos</h1>
 </header>
-<div class='container'>
-    <div class='filters'>
+<div class="container">
+    <div class="filters">
         <div>
-            <label for='filtroGrado'><i class='fa-solid fa-layer-group'></i> Grado:</label>
-            <select id='filtroGrado'></select>
+            <label for="filtroGrado"><i class="fa-solid fa-layer-group"></i> Grado:</label>
+            <select id="filtroGrado"></select>
         </div>
         <div>
-            <label for='filtroMaestro'><i class='fa-solid fa-chalkboard-user'></i> Maestro/a:</label>
-            <select id='filtroMaestro'></select>
+            <label for="filtroMaestro"><i class="fa-solid fa-chalkboard-user"></i> Maestro/a:</label>
+            <select id="filtroMaestro"></select>
         </div>
     </div>
-    <table id='tablaPagos'>
+    <table id="tablaPagos">
         <thead>
             <tr>
                 <th>Alumno</th>
                 <th>Familiar</th>
                 <th>Grado</th>
                 <th>Maestro/a</th>
-                <th>Ene</th><th>Feb</th><th>Mar</th><th>Abr</th><th>May</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dic</th>
+                <th>Feb</th><th>Mar</th><th>Abr</th><th>May</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Sep</th><th>Oct</th><th>Nov</th>
             </tr>
         </thead>
         <tbody></tbody>
