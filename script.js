@@ -304,9 +304,9 @@ window.cargarTabla = async function(){
 
     MESES.forEach(mes => {
       if(alumno.pagos && alumno.pagos[mes]){
-        tr.innerHTML += `<td><i class='fa-solid fa-check icon-ok'></i> L.${alumno.pagos[mes]}</td>`;
+        tr.innerHTML += `<td><i class="fa-solid fa-check estado-check"></i> L.${alumno.pagos[mes]}</td>`;
       } else {
-        tr.innerHTML += `<td><i class='fa-solid fa-xmark icon-x'></i></td>`;
+        tr.innerHTML += `<td><i class="fa-solid fa-xmark estado-x"></i></td>`;
       }
     });
 
@@ -327,14 +327,3 @@ window.addEventListener('DOMContentLoaded', async ()=>{
   if(gradoSel) gradoSel.addEventListener('change', cargarTabla);
   if(maestroSel) maestroSel.addEventListener('change', cargarTabla);
 });
-.estado-x {
-    color: #dc3545 !important;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.estado-check {
-    color: #28a745 !important;
-    font-weight: bold;
-    font-size: 20px;
-}
