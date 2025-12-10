@@ -273,13 +273,13 @@ th {
 
 /* Mes pagado */
 .paid {
-  background-color: #ffcc80 !important; /* naranja suave */
-  color: #000;
+  background-color: #d1e7dd !important; /* verde claro */
+  color: #0f5132;
 }
 
 /* Mes seleccionado pagado */
 .selected-paid {
-  background-color: #ff9f29 !important; /* naranja fuerte */
+  background-color: #198754 !important; /* verde éxito */
   color: white;
 }
 
