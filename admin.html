@@ -56,7 +56,7 @@
 </div>
 
 <!-- Modal para pagos -->
-<div id="modalPago" class="modal">
+<div id="modalPago" class="modal" aria-hidden="true">
     <div class="modal-content">
         <span class="close" onclick="cerrarModal()">&times;</span>
         <h2>Registrar / Editar Pago</h2>
@@ -66,7 +66,7 @@
         <div id="pagosRegistrados" style="margin-bottom:10px;"></div>
 
         <label for="montoPago">Monto a pagar (Lps):</label>
-        <input type="number" id="montoPago" placeholder="Ej: 50">
+        <input type="number" id="montoPago" placeholder="Ej: 50" min="0">
 
         <label>Mes a pagar:</label>
         <div id="mesesContainer" class="meses"></div>
@@ -74,6 +74,28 @@
         <div style="text-align:center; margin-top:12px;">
             <button onclick="guardarPago()" class="btn green">Guardar Pago</button>
             <button onclick="cerrarModal()" class="btn" style="margin-left:8px;">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar alumno -->
+<div id="modalEditar" class="modal" aria-hidden="true">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModalEditar()">&times;</span>
+        <h2><i class="fa-solid fa-user-pen"></i> Editar Alumno</h2>
+
+        <input type="text" id="editNombre" placeholder="Nombre del Alumno">
+        <input type="text" id="editFamiliar" placeholder="Familiar">
+        <input type="text" id="editGrado" placeholder="Grado">
+        <input type="text" id="editMaestro" placeholder="Maestro/a">
+
+        <div style="margin-top:12px; text-align:center;">
+            <button onclick="guardarEdicion()" class="btn green">
+                <i class="fa-solid fa-save"></i> Guardar Cambios
+            </button>
+            <button onclick="cerrarModalEditar()" class="btn" style="margin-left:8px;">
+                Cancelar
+            </button>
         </div>
     </div>
 </div>
