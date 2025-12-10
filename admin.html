@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Administración</title>
+
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module" src="script.js"></script>
+
 </head>
 <body>
 
@@ -14,20 +16,25 @@
     <h1 id="tituloAdmin"><i class="fa-solid fa-user-shield"></i> Acceso Administrador</h1>
 </header>
 
-<div class="container">
+<!-- CONTENEDOR ESPECIAL PARA ADMIN -->
+<div class="admin-wrapper">
 
+    <!-- LOGIN -->
     <div class="login-container vertical">
         <input type="password" id="adminPass" placeholder="Ingrese código">
+
         <div class="login-actions">
             <button onclick="window.location.href='index.html'" class="btn-back inline">
                 <i class="fa-solid fa-arrow-left"></i> Inicio
             </button>
+
             <button onclick="login()" class="btn inline">
                 Ingresar
             </button>
         </div>
     </div>
-   
+
+    <!-- PANEL ADMIN -->
     <div id="adminPanel" style="display:none;">
         <h2><i class="fa-solid fa-user-plus"></i> Registrar Nuevo Alumno</h2>
 
@@ -36,7 +43,6 @@
         <input type="text" id="grado" placeholder="Grado">
         <input type="text" id="maestro" placeholder="Maestro/a">
 
-        <!-- Botones: Registrar Alumno + Home -->
         <div style="margin-top:10px;">
             <button onclick="registrarAlumno()" class="btn green">
                 <i class="fa-solid fa-user-plus"></i> Registrar Alumno
@@ -55,7 +61,7 @@
 
 </div>
 
-<!-- Modal para pagos -->
+<!-- Modal Pago -->
 <div id="modalPago" class="modal" aria-hidden="true">
     <div class="modal-content">
         <span class="close" onclick="cerrarModal()">&times;</span>
@@ -78,7 +84,7 @@
     </div>
 </div>
 
-<!-- Modal para editar alumno -->
+<!-- Modal Editar Alumno -->
 <div id="modalEditar" class="modal" aria-hidden="true">
     <div class="modal-content">
         <span class="close" onclick="cerrarModalEditar()">&times;</span>
@@ -93,6 +99,7 @@
             <button onclick="guardarEdicion()" class="btn green">
                 <i class="fa-solid fa-save"></i> Guardar Cambios
             </button>
+
             <button onclick="cerrarModalEditar()" class="btn" style="margin-left:8px;">
                 Cancelar
             </button>

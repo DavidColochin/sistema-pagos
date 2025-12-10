@@ -292,3 +292,32 @@ th { background: #0b5ed7; color: #fff; }
   .pago-row .mes-label { width: 70px; }
   .pago-row .mes-amount { width: 70px; }
 }
+/* === ADMIN CENTRADO Y BONITO === */
+.admin-wrapper {
+    max-width: 750px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* Centrar título */
+#tituloAdmin {
+    text-align: center;
+}
+
+/* Inputs más amplios */
+#adminPanel input,
+.login-container input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Centrar login */
+.login-container {
+    text-align: center;
+}
+
+/* Lista de alumnos */
+#listaAlumnos {
+    list-style: none;
+    padding: 0;
+}
