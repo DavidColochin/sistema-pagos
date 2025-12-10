@@ -33,6 +33,32 @@ header .btn-back {
   font-weight: 600;
 }
 
+/* === TARJETAS DE INICIO (CENTRADAS) === */
+.options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 40px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: #fff;
+  padding: 25px;
+  width: 260px;
+  text-align: center;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+}
+
+.card .icon {
+  font-size: 45px;
+  margin-bottom: 10px;
+  color: #0b5ed7;
+}
+
 /* === LOGIN === */
 .login-container {
   display: flex;
@@ -81,8 +107,11 @@ header .btn-back {
   border-radius: 6px;
 }
 
-/* danger small */
-.btn.small.danger { background: #dc3545; color: #fff; }
+/* danger small (rojo suave) */
+.btn.small.danger { 
+  background: #e26b6b; 
+  color: #fff; 
+}
 
 /* === HOME BUTTON === */
 .btn.home { background: #f4f4f5; color: #111827; border: 1px solid #e5e7eb; font-weight: 600; }
@@ -113,7 +142,7 @@ ul li {
 
 /* === BOTONES DE CADA ALUMNO === */
 
-/* contenedor de los 3 botones */
+/* contenedor de botones */
 .btn-group {
   display: flex;
   gap: 8px;
@@ -131,7 +160,7 @@ ul li {
 }
 .btn-pago:hover { filter: brightness(1.08); }
 
-/* Editar (amarillo profesional) */
+/* Editar */
 .btn-editar {
   background: #f0c420;
   color: #000;
@@ -143,9 +172,9 @@ ul li {
 }
 .btn-editar:hover { filter: brightness(1.1); }
 
-/* Eliminar (rojo fuerte) */
+/* Eliminar (ROJO SUAVE) */
 .btn-eliminar {
-  background: #dc3545;
+  background: #e26b6b;
   color: #fff;
   border: none;
   padding: 8px 14px;
@@ -228,15 +257,14 @@ ul li {
   box-shadow: 0 6px 16px rgba(255,159,41,0.22);
 }
 
-/* Botón desactivado */
+/* Disabled */
 .meses button.disabled { background: #ccc; cursor: not-allowed; }
 
-/* Hover */
 .meses button:hover:not(.disabled):not(.selected):not(.paid):not(.selected-paid) {
   background: #d6dbe4;
 }
 
-/* filas de pagos (dentro del modal) */
+/* filas de pagos */
 .pago-row {
   display: flex;
   gap: 12px;
@@ -252,9 +280,6 @@ ul li {
 
 .pago-row .mes-label { width: 90px; text-align:left; font-weight:700; color:#333; }
 .pago-row .mes-amount { width: 80px; text-align:right; color:#1f5a20; font-weight:700; }
-
-/* small helper button style inside modal */
-.pago-row button { margin-left:8px; }
 
 /* === TABLAS === */
 table {
@@ -292,31 +317,30 @@ th { background: #0b5ed7; color: #fff; }
   .pago-row .mes-label { width: 70px; }
   .pago-row .mes-amount { width: 70px; }
 }
-/* === ADMIN CENTRADO Y BONITO === */
+
+/* === ADMIN CENTRADO === */
 .admin-wrapper {
     max-width: 750px;
     margin: 30px auto;
     padding: 20px;
 }
 
-/* Centrar título */
 #tituloAdmin {
     text-align: center;
 }
 
-/* Inputs más amplios */
+/* Inputs anchos */
 #adminPanel input,
 .login-container input {
     width: 100%;
     margin-bottom: 10px;
 }
 
-/* Centrar login */
+/* Centrar login admin */
 .login-container {
     text-align: center;
 }
 
-/* Lista de alumnos */
 #listaAlumnos {
     list-style: none;
     padding: 0;
