@@ -270,3 +270,21 @@ th {
 .btn.home:hover {
     background: #e5e7eb;
 }
+
+/* Mes pagado */
+.paid {
+  background-color: #ffcc80 !important; /* naranja suave */
+  color: #000;
+}
+
+/* Mes seleccionado pagado */
+.selected-paid {
+  background-color: #ff9f29 !important; /* naranja fuerte */
+  color: white;
+}
+
+/* Mes seleccionado normal (azul) */
+.selected {
+  background-color: #2563eb !important;
+  color: white;
+}
