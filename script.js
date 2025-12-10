@@ -158,18 +158,14 @@ window.seleccionarMes = function(mes){
   const alumno = cacheAlumnos.find(a => a.id === alumnoActual);
   const boton = document.getElementById(`mes_${mes}`);
 
-  if(alumno.pagos && alumno.pagos[mes]){
-    boton.classList.add('selected-paid');
+  if (alumno.pagos?.[mes]) {
+    boton.classList.add('selected-paid'); // naranja fuerte
   } else {
-    boton.classList.add('selected');
+    boton.classList.add('selected'); // azul normal
   }
 
   const montoInput = document.getElementById('montoPago');
-  if(alumno?.pagos?.[mes]){
-    montoInput.value = alumno.pagos[mes];
-  } else {
-    montoInput.value = '';
-  }
+  montoInput.value = alumno.pagos?.[mes] || '';
 };
 
 // =======================
@@ -204,6 +200,30 @@ window.guardarPago = async function(){
 };
 
 // =======================
+//  ELIMINAR PAGO DE MES
+// =======================
+window.eliminarPago = async function(mes){
+  if(!confirm(`¿Eliminar el pago del mes ${mes}?`)) return;
+
+  const alumno = cacheAlumnos.find(a => a.id === alumnoActual);
+  delete alumno.pagos[mes];
+
+  const alumnoRef = doc(db, 'alumnos', alumnoActual);
+  await updateDoc(alumnoRef, { pagos: alumno.pagos });
+
+  mostrarAlumnos();
+  cargarTabla();
+  cargarFiltros();
+
+  const actualizado = cacheAlumnos.find(a => a.id === alumnoActual);
+  mostrarPagos(actualizado);
+  generarBotonesMes(actualizado);
+
+  mesSeleccionado = null;
+  document.getElementById('montoPago').value = '';
+};
+
+// =======================
 //  MOSTRAR PAGOS EN MODAL
 // =======================
 function mostrarPagos(alumno){
@@ -213,7 +233,11 @@ function mostrarPagos(alumno){
   MESES_VALIDOS.forEach(mes => {
     if(alumno.pagos?.[mes]){
       const div = document.createElement('div');
-      div.textContent = `${mes}: L.${alumno.pagos[mes]}`;
+      div.innerHTML = `
+        ${mes}: L.${alumno.pagos[mes]}
+        <button onclick="eliminarPago('${mes}')" style="background:red;color:white;border:none;padding:3px 6px;border-radius:4px;margin-left:10px;">
+          Eliminar
+        </button>`;
       cont.appendChild(div);
     }
   });
@@ -229,7 +253,9 @@ function generarBotonesMes(alumno){
   MESES_VALIDOS.forEach(mes => {
     const btn = document.createElement('button');
     btn.id = `mes_${mes}`;
-    btn.textContent = mes;
+
+    // texto: si tiene pago → “Mes (pagado)”
+    btn.textContent = alumno.pagos?.[mes] ? `${mes} (pagado)` : mes;
 
     if(alumno.pagos?.[mes]){
       btn.classList.add('paid'); // naranja suave
