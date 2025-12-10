@@ -111,7 +111,49 @@ ul li {
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
-ul li button { margin-left: 6px; }
+/* === BOTONES DE CADA ALUMNO === */
+
+/* contenedor de los 3 botones */
+.btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* Pago (verde) */
+.btn-pago {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-pago:hover { filter: brightness(1.08); }
+
+/* Editar (amarillo profesional) */
+.btn-editar {
+  background: #f0c420;
+  color: #000;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-editar:hover { filter: brightness(1.1); }
+
+/* Eliminar (rojo fuerte) */
+.btn-eliminar {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-eliminar:hover { filter: brightness(1.1); }
 
 /* === CONTAINER === */
 .container { max-width: 1000px; margin: 20px auto; padding: 0 12px; }
@@ -153,33 +195,33 @@ ul li button { margin-left: 6px; }
   padding: 10px 12px;
   border: none;
   border-radius: 8px;
-  background: #e9ecef; /* default gray */
+  background: #e9ecef;
   min-width: 74px;
   cursor: pointer;
   font-weight: 700;
 }
 
-/* Mes sin seleccionar (default): gris */
+/* Mes sin seleccionar */
 .meses button:not(.selected):not(.paid):not(.selected-paid) {
   background: #eef2f6;
   color: #333;
 }
 
-/* Mes seleccionado (azul) */
+/* Mes seleccionado */
 .meses button.selected {
   background: #0d6efd;
   color: #fff;
   box-shadow: 0 4px 10px rgba(13,110,253,0.18);
 }
 
-/* Mes pagado (naranja suave profesional) */
+/* Mes pagado */
 .meses button.paid {
   background: linear-gradient(180deg,#ffe9d6,#ffd8b5);
   color: #4a2b00;
   box-shadow: 0 2px 6px rgba(255,187,120,0.15);
 }
 
-/* Mes seleccionado pagado (naranja más fuerte) */
+/* Mes seleccionado pagado */
 .meses button.selected-paid {
   background: linear-gradient(180deg,#ffad4a,#ff9f29);
   color: #fff;
@@ -189,7 +231,7 @@ ul li button { margin-left: 6px; }
 /* Botón desactivado */
 .meses button.disabled { background: #ccc; cursor: not-allowed; }
 
-/* Hover (profesional) */
+/* Hover */
 .meses button:hover:not(.disabled):not(.selected):not(.paid):not(.selected-paid) {
   background: #d6dbe4;
 }
