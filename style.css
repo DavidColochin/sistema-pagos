@@ -53,6 +53,25 @@ header .btn-back {
   box-shadow: 0 4px 10px rgba(0,0,0,0.10);
 }
 
+/* Efecto hover profesional en tarjetas */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+/* Botón ocupa todo el ancho de la tarjeta */
+.card .btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Subtítulo del header más fino */
+header p {
+  opacity: 0.9;
+  font-size: 15px;
+}
+
+
 .card .icon {
   font-size: 45px;
   margin-bottom: 10px;
