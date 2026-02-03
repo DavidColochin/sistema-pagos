@@ -414,10 +414,27 @@ window.addEventListener('DOMContentLoaded', async ()=>{
   await cargarFiltros();
   await cargarTabla();
 
-  // cerrar modal si se hace click fuera del contenido
+  // === FILTROS ===
+  const gradoSel = document.getElementById('filtroGrado');
+  const maestroSel = document.getElementById('filtroMaestro');
+
+  if (gradoSel) {
+    gradoSel.addEventListener('change', () => {
+      cargarTabla();
+    });
+  }
+
+  if (maestroSel) {
+    maestroSel.addEventListener('change', () => {
+      cargarTabla();
+    });
+  }
+
+  // === cerrar modal si se hace click fuera ===
   document.addEventListener('click', (e)=>{
     const modal = document.getElementById('modalPago');
     if(e.target === modal) cerrarModal();
+
     const modalE = document.getElementById('modalEditar');
     if(e.target === modalE) cerrarModalEditar();
   });
