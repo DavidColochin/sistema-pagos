@@ -38,10 +38,12 @@
     <div id="adminPanel" style="display:none;">
         <h2><i class="fa-solid fa-user-plus"></i> Registrar Nuevo Alumno</h2>
 
-        <input type="text" id="nombre" placeholder="Nombre del Alumno">
-        <input type="text" id="familiar" placeholder="Familiar del Alumno">
-        <input type="text" id="grado" placeholder="Grado">
-        <input type="text" id="maestro" placeholder="Maestro/a">
+        <input type="text" id="nombre" placeholder="Nombre del Alumno" class="upper">
+        <input type="text" id="familiar" placeholder="Familiar del Alumno" class="upper">
+        <input type="text" id="grado" placeholder="Grado"
+           inputmode="numeric" pattern="\d*" maxlength="2" class="only-numbers">
+       
+        <input type="text" id="maestro" placeholder="Maestro/a" class="upper">
 
         <div style="margin-top:10px;">
             <button onclick="registrarAlumno()" class="btn green">
@@ -90,10 +92,10 @@
         <span class="close" onclick="cerrarModalEditar()">&times;</span>
         <h2><i class="fa-solid fa-user-pen"></i> Editar Alumno</h2>
 
-        <input type="text" id="editNombre" placeholder="Nombre del Alumno">
-        <input type="text" id="editFamiliar" placeholder="Familiar">
-        <input type="text" id="editGrado" placeholder="Grado">
-        <input type="text" id="editMaestro" placeholder="Maestro/a">
+        <input type="text" id="editNombre" placeholder="Nombre del Alumno" class="upper">
+        <input type="text" id="editFamiliar" placeholder="Familiar" class="upper">
+        <input type="text" id="editGrado" placeholder="Grado" class="only-numbers">
+        <input type="text" id="editMaestro" placeholder="Maestro/a" class="upper">
 
         <div style="margin-top:12px; text-align:center;">
             <button onclick="guardarEdicion()" class="btn green">
