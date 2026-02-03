@@ -439,3 +439,60 @@ window.addEventListener('DOMContentLoaded', async ()=>{
     if(e.target === modalE) cerrarModalEditar();
   });
 });
+// =======================
+//  MÁSCARAS DE ENTRADA (UX)
+// =======================
+
+function toUpperLive(input) {
+  // Convierte en mayúsculas mientras se escribe o pega
+  input.addEventListener('input', () => {
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    input.value = input.value.toUpperCase();
+    // preserva el cursor
+    input.setSelectionRange(start, end);
+  });
+}
+
+function onlyDigitsLive(input) {
+  // Restringe a 0-9 en tiempo real (input/pegado)
+  input.addEventListener('input', () => {
+    const filtered = input.value.replace(/\D+/g, ''); // quita todo lo no numérico
+    if (input.value !== filtered) input.value = filtered;
+  });
+
+  // Bloquea teclas no numéricas
+  input.addEventListener('keydown', (e) => {
+    const allowed = [
+      'Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'
+    ];
+    if (allowed.includes(e.key)) return;
+
+    const isCtrlCmd = e.ctrlKey || e.metaKey;
+    if (isCtrlCmd && ['a','c','v','x'].includes(e.key.toLowerCase())) return;
+
+    // Permite solo dígitos
+    if (!/^\d$/.test(e.key)) e.preventDefault();
+  });
+}
+
+// Inicializa máscaras en todos los inputs correspondientes
+function setupInputMasks() {
+  // Registro
+  const nombre   = document.getElementById('nombre');
+  const familiar = document.getElementById('familiar');
+  const grado    = document.getElementById('grado');
+  const maestro  = document.getElementById('maestro');
+
+  [nombre, familiar, maestro].forEach(el => el && toUpperLive(el));
+  if (grado) onlyDigitsLive(grado);
+
+  // Edición
+  const eNombre   = document.getElementById('editNombre');
+  const eFamiliar = document.getElementById('editFamiliar');
+  const eGrado    = document.getElementById('editGrado');
+  const eMaestro  = document.getElementById('editMaestro');
+
+  [eNombre, eFamiliar, eMaestro].forEach(el => el && toUpperLive(el));
+  if (eGrado) onlyDigitsLive(eGrado);
+}
