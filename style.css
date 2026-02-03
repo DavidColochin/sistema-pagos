@@ -364,3 +364,7 @@ th { background: #0b5ed7; color: #fff; }
     list-style: none;
     padding: 0;
 }
+
+/* Visual: muestra el texto en mayúscula (aunque JS ya lo transformará de verdad) */
+input.upper { text-transform: uppercase; }
+``
