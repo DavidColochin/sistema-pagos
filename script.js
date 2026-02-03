@@ -432,7 +432,10 @@ window.cargarFiltros = async function(){
   await cargarTodos();
 
   const grados = Array.from(new Set(cacheAlumnos.map(a => (a.grado||'').trim()))).filter(g=>g);
-  const maestros = Array.from(new Set(cacheAlumnos.map(a => (a.maestro||'').trim()))).filter(m=>m);
+  
+  const maestros = Array.from(
+  new Set(cacheAlumnos.map(a => (a.maestro || '').trim().toUpperCase()))
+  ).filter(m => m);
 
   gradoSel.innerHTML = '<option value="Todos">Todos</option>' + grados.map(g=>`<option>${g}</option>`).join('');
   maestroSel.innerHTML = '<option value="Todos">Todos</option>' + maestros.map(m=>`<option>${m}</option>`).join('');
@@ -447,13 +450,15 @@ window.cargarTabla = async function(){
   const gradoSel = document.getElementById('filtroGrado');
   const maestroSel = document.getElementById('filtroMaestro');
 
-  const gradoFiltro = gradoSel ? gradoSel.value : 'Todos';
-  const maestroFiltro = maestroSel ? maestroSel.value : 'Todos';
+  
+const gradoFiltro = gradoSel ? gradoSel.value : 'Todos';
+const maestroFiltro = maestroSel ? maestroSel.value.toUpperCase() : 'TODOS';
 
-  const alumnosFiltrados = cacheAlumnos.filter(a =>
-    (gradoFiltro==='Todos' || a.grado===gradoFiltro) &&
-    (maestroFiltro==='Todos' || a.maestro===maestroFiltro)
-  );
+  
+const alumnosFiltrados = cacheAlumnos.filter(a =>
+  (gradoFiltro === 'Todos' || a.grado === gradoFiltro) &&
+  (maestroFiltro === 'TODOS' || (a.maestro || '').toUpperCase() === maestroFiltro)
+);
 
   tbody.innerHTML = '';
 
@@ -461,10 +466,10 @@ window.cargarTabla = async function(){
     const tr = document.createElement('tr');
 
     tr.innerHTML = `
-      <td>${alumno.nombre}</td>
-      <td>${alumno.familiar}</td>
+      <td>${(alumno.nombre || '').toUpperCase()}</td>
+      <td>${(alumno.familiar || '').toUpperCase()}</td>
       <td>${alumno.grado}</td>
-      <td>${alumno.maestro}</td>
+      <td>${(alumno.maestro || '').toUpperCase()}</td>
     `;
 
     MESES_VALIDOS.forEach(mes => {
