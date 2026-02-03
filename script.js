@@ -100,6 +100,16 @@ window.login = function(){
     mostrarAlumnos();
     cargarFiltros();
     cargarTabla();
+    cargarFiltroMaestroAdmin();
+
+  const filtroMaestroAdmin = document.getElementById('filtroMaestroAdmin');
+  if (filtroMaestroAdmin) {
+    filtroMaestroAdmin.addEventListener('change', () => {
+      // al cambiar maestro, volvemos a listar con el filtro aplicado
+      mostrarAlumnos();
+    });
+  }
+
   } else {
     alert('Código incorrecto');
   }
@@ -133,6 +143,7 @@ window.registrarAlumno = async function(){
     await mostrarAlumnos();
     await cargarTabla();
     await cargarFiltros();
+    await cargarFiltroMaestroAdmin(); // <-- añade esta línea
   } else {
     alert('Complete todos los campos');
   }
@@ -530,3 +541,27 @@ window.addEventListener('DOMContentLoaded', async ()=>{
     if(e.target === modalE) cerrarModalEditar();
   });
 });
+
+// =======================
+//  Filtro Maestro en ADMIN (llenar opciones)
+// =======================
+async function cargarFiltroMaestroAdmin(){
+  const sel = document.getElementById('filtroMaestroAdmin');
+  if(!sel) return;
+
+  // Si el cache está vacío, traemos alumnos (evita errores si se llama muy pronto)
+  if (!cacheAlumnos.length) {
+    const qs = await getDocs(collection(db, 'alumnos'));
+    cacheAlumnos = [];
+    qs.forEach(docSnap => { cacheAlumnos.push({ id: docSnap.id, ...docSnap.data() }); });
+  }
+
+  // Maestros únicos en MAYÚSCULAS
+  const maestros = Array.from(
+    new Set(cacheAlumnos.map(a => (a.maestro || '').trim().toUpperCase()))
+  ).filter(m => m);
+
+  // Render del select
+  sel.innerHTML = '<option value="TODOS">Todos</option>' +
+                  maestros.map(m => `<option value="${m}">${m}</option>`).join('');
+}
