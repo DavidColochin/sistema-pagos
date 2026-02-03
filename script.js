@@ -140,7 +140,7 @@ window.registrarAlumno = async function(){
 
 
 // =======================
-//  LISTAR ALUMNOS
+//  LISTAR ALUMNOS (con orden alfabético + filtro por maestro)
 // =======================
 async function mostrarAlumnos(){
   const lista = document.getElementById('listaAlumnos');
@@ -153,14 +153,27 @@ async function mostrarAlumnos(){
   cacheAlumnos = [];
   querySnapshot.forEach(docSnap => { cacheAlumnos.push({ id: docSnap.id, ...docSnap.data() }); });
 
+  // === ORDENAR ALFABÉTICAMENTE POR NOMBRE (case-insensitive) ===
+  cacheAlumnos.sort((a, b) =>
+    (a.nombre || '').toUpperCase().localeCompare((b.nombre || '').toUpperCase(), 'es', { sensitivity: 'base' })
+  );
+
+  // === APLICAR FILTRO POR MAESTRO (si existe el select en admin) ===
+  const filtroMaestroAdmin = document.getElementById('filtroMaestroAdmin');
+  const maestroFiltro = filtroMaestroAdmin ? filtroMaestroAdmin.value.toUpperCase() : 'TODOS';
+
+  const alumnosParaMostrar = cacheAlumnos.filter(a =>
+    (maestroFiltro === 'TODOS') || ((a.maestro || '').toUpperCase() === maestroFiltro)
+  );
+
+  // === RENDER ===
   lista.innerHTML = '';
-  cacheAlumnos.forEach((alumno) => {
+  alumnosParaMostrar.forEach((alumno) => {
     const li = document.createElement('li');
 
-    // botones: Pago, Editar, Eliminar alumno
     li.innerHTML = `
       <div style="display:flex;gap:8px;align-items:center;">
-        <strong>${alumno.nombre}</strong>
+        <strong>${(alumno.nombre || '').toUpperCase()}</strong>
         <span style="opacity:0.7;margin-left:6px;">(${alumno.grado || ''})</span>
       </div>
       <div>
@@ -171,7 +184,7 @@ async function mostrarAlumnos(){
     lista.appendChild(li);
   });
 
-  if(contador) contador.textContent = `Total alumnos: ${cacheAlumnos.length}`;
+  if(contador) contador.textContent = `Total alumnos: ${alumnosParaMostrar.length}`;
 }
 
 // =======================
