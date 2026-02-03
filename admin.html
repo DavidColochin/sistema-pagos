@@ -45,15 +45,25 @@
        
         <input type="text" id="maestro" placeholder="Maestro/a" class="upper">
 
-        <div style="margin-top:10px;">
-            <button onclick="registrarAlumno()" class="btn green">
+       
+            <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <button onclick="registrarAlumno()" class="btn green">
                 <i class="fa-solid fa-user-plus"></i> Registrar Alumno
-            </button>
-
+              </button>
+                                  
             <button onclick="window.location.href='index.html'" class="btn btn-back" style="margin-left:8px;">
                 <i class="fa-solid fa-house"></i> Inicio
             </button>
-        </div>
+            
+            <!-- 🔎 Nuevo: Filtro por Maestro/a en Admin -->
+              <label for="filtroMaestroAdmin" style="font-weight:600; display:flex; gap:6px; align-items:center;">
+                <i class="fa-solid fa-chalkboard-user"></i> Maestro/a:
+              </label>
+              <select id="filtroMaestroAdmin" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+                <!-- Se llenará dinámicamente con JS -->
+              </select>
+          
+            </div>
 
         <p id="contador"></p>
 
