@@ -28,6 +28,64 @@ let cacheAlumnos = [];            // cache local de alumnos
 const MESES_VALIDOS = ['Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov'];
 
 // =======================
+//  MÁSCARAS DE ENTRADA (UX)
+// =======================
+
+function toUpperLive(input) {
+  // Convierte en mayúsculas mientras se escribe o pega
+  input.addEventListener('input', () => {
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    input.value = input.value.toUpperCase();
+    // preserva el cursor
+    input.setSelectionRange(start, end);
+  });
+}
+
+function onlyDigitsLive(input) {
+  // Restringe a 0-9 en tiempo real (input/pegado)
+  input.addEventListener('input', () => {
+    const filtered = input.value.replace(/\D+/g, ''); // quita todo lo no numérico
+    if (input.value !== filtered) input.value = filtered;
+  });
+
+  // Bloquea teclas no numéricas
+  input.addEventListener('keydown', (e) => {
+    const allowed = [
+      'Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'
+    ];
+    if (allowed.includes(e.key)) return;
+
+    const isCtrlCmd = e.ctrlKey || e.metaKey;
+    if (isCtrlCmd && ['a','c','v','x'].includes(e.key.toLowerCase())) return;
+
+    // Permite solo dígitos
+    if (!/^\d$/.test(e.key)) e.preventDefault();
+  });
+}
+
+// Inicializa máscaras en todos los inputs correspondientes
+function setupInputMasks() {
+  // Registro
+  const nombre   = document.getElementById('nombre');
+  const familiar = document.getElementById('familiar');
+  const grado    = document.getElementById('grado');
+  const maestro  = document.getElementById('maestro');
+
+  [nombre, familiar, maestro].forEach(el => el && toUpperLive(el));
+  if (grado) onlyDigitsLive(grado);
+
+  // Edición
+  const eNombre   = document.getElementById('editNombre');
+  const eFamiliar = document.getElementById('editFamiliar');
+  const eGrado    = document.getElementById('editGrado');
+  const eMaestro  = document.getElementById('editMaestro');
+
+  [eNombre, eFamiliar, eMaestro].forEach(el => el && toUpperLive(el));
+  if (eGrado) onlyDigitsLive(eGrado);
+}
+
+// =======================
 //  LOGIN ADMIN
 // =======================
 window.login = function(){
@@ -51,20 +109,27 @@ window.login = function(){
 //  REGISTRAR ALUMNO
 // =======================
 window.registrarAlumno = async function(){
-  const nombre = document.getElementById('nombre').value.trim();
-  const familiar = document.getElementById('familiar').value.trim();
-  const grado = document.getElementById('grado').value.trim();
-  const maestro = document.getElementById('maestro').value.trim();
+  let nombre   = document.getElementById('nombre').value.trim();
+  let familiar = document.getElementById('familiar').value.trim();
+  let grado    = document.getElementById('grado').value.trim();
+  let maestro  = document.getElementById('maestro').value.trim();
+
+  // Normalización final
+  nombre   = nombre.toUpperCase();
+  familiar = familiar.toUpperCase();
+  maestro  = maestro.toUpperCase();
+  grado    = grado.replace(/\D+/g,''); // Solo dígitos
 
   if(nombre && familiar && grado && maestro){
-    await addDoc(collection(db, 'alumnos'), { nombre, familiar, grado, maestro, pagos: {} });
+    await addDoc(collection(db, 'alumnos'), { 
+      nombre, familiar, grado, maestro, pagos: {} 
+    });
 
-    document.getElementById('nombre').value='';
-    document.getElementById('familiar').value='';
-    document.getElementById('grado').value='';
-    document.getElementById('maestro').value='';
+    document.getElementById('nombre').value   = '';
+    document.getElementById('familiar').value = '';
+    document.getElementById('grado').value    = '';
+    document.getElementById('maestro').value  = '';
 
-    // refrescar
     await mostrarAlumnos();
     await cargarTabla();
     await cargarFiltros();
@@ -72,6 +137,7 @@ window.registrarAlumno = async function(){
     alert('Complete todos los campos');
   }
 };
+
 
 // =======================
 //  LISTAR ALUMNOS
@@ -321,11 +387,18 @@ window.cerrarModalEditar = function(){
   document.getElementById('modalEditar').style.display = 'none';
 };
 
+
 window.guardarEdicion = async function(){
-  const nombre = document.getElementById('editNombre').value.trim();
-  const familiar = document.getElementById('editFamiliar').value.trim();
-  const grado = document.getElementById('editGrado').value.trim();
-  const maestro = document.getElementById('editMaestro').value.trim();
+  let nombre   = document.getElementById('editNombre').value.trim();
+  let familiar = document.getElementById('editFamiliar').value.trim();
+  let grado    = document.getElementById('editGrado').value.trim();
+  let maestro  = document.getElementById('editMaestro').value.trim();
+
+  // Normalización final
+  nombre   = nombre.toUpperCase();
+  familiar = familiar.toUpperCase();
+  maestro  = maestro.toUpperCase();
+  grado    = grado.replace(/\D+/g,'');
 
   if(!nombre || !familiar || !grado || !maestro){
     alert('Complete todos los campos para guardar');
@@ -335,7 +408,6 @@ window.guardarEdicion = async function(){
   const alumnoRef = doc(db, 'alumnos', alumnoActual);
   await updateDoc(alumnoRef, { nombre, familiar, grado, maestro });
 
-  // refrescar vistas
   await mostrarAlumnos();
   await cargarTabla();
   await cargarFiltros();
@@ -411,6 +483,7 @@ window.cargarTabla = async function(){
 //  INIT
 // =======================
 window.addEventListener('DOMContentLoaded', async ()=>{
+ setupInputMasks();   // <-- ¡IMPORTANTE!
   await cargarFiltros();
   await cargarTabla();
 
@@ -439,60 +512,3 @@ window.addEventListener('DOMContentLoaded', async ()=>{
     if(e.target === modalE) cerrarModalEditar();
   });
 });
-// =======================
-//  MÁSCARAS DE ENTRADA (UX)
-// =======================
-
-function toUpperLive(input) {
-  // Convierte en mayúsculas mientras se escribe o pega
-  input.addEventListener('input', () => {
-    const start = input.selectionStart;
-    const end = input.selectionEnd;
-    input.value = input.value.toUpperCase();
-    // preserva el cursor
-    input.setSelectionRange(start, end);
-  });
-}
-
-function onlyDigitsLive(input) {
-  // Restringe a 0-9 en tiempo real (input/pegado)
-  input.addEventListener('input', () => {
-    const filtered = input.value.replace(/\D+/g, ''); // quita todo lo no numérico
-    if (input.value !== filtered) input.value = filtered;
-  });
-
-  // Bloquea teclas no numéricas
-  input.addEventListener('keydown', (e) => {
-    const allowed = [
-      'Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'
-    ];
-    if (allowed.includes(e.key)) return;
-
-    const isCtrlCmd = e.ctrlKey || e.metaKey;
-    if (isCtrlCmd && ['a','c','v','x'].includes(e.key.toLowerCase())) return;
-
-    // Permite solo dígitos
-    if (!/^\d$/.test(e.key)) e.preventDefault();
-  });
-}
-
-// Inicializa máscaras en todos los inputs correspondientes
-function setupInputMasks() {
-  // Registro
-  const nombre   = document.getElementById('nombre');
-  const familiar = document.getElementById('familiar');
-  const grado    = document.getElementById('grado');
-  const maestro  = document.getElementById('maestro');
-
-  [nombre, familiar, maestro].forEach(el => el && toUpperLive(el));
-  if (grado) onlyDigitsLive(grado);
-
-  // Edición
-  const eNombre   = document.getElementById('editNombre');
-  const eFamiliar = document.getElementById('editFamiliar');
-  const eGrado    = document.getElementById('editGrado');
-  const eMaestro  = document.getElementById('editMaestro');
-
-  [eNombre, eFamiliar, eMaestro].forEach(el => el && toUpperLive(el));
-  if (eGrado) onlyDigitsLive(eGrado);
-}
