@@ -366,8 +366,10 @@ th { background: #0b5ed7; color: #fff; }
 }
 
 /* Visual: muestra el texto en mayúscula (aunque JS ya lo transformará de verdad) */
-input.upper { text-transform: uppercase; }
-``
+input.upper {
+  text-transform: uppercase;
+}
+
 .btn-pago-icon {
   background: #28a745;
   color: white;
