@@ -500,6 +500,11 @@ const alumnosFiltrados = cacheAlumnos.filter(a =>
   (maestroFiltro === 'TODOS' || (a.maestro || '').toUpperCase() === maestroFiltro)
 );
 
+  // 🔤 ORDEN ALFABÉTICO POR NOMBRE (A → Z)
+alumnosFiltrados.sort((a, b) =>
+  (a.nombre || '').localeCompare(b.nombre || '', 'es', { sensitivity: 'base' })
+);
+  
   tbody.innerHTML = '';
 
   alumnosFiltrados.forEach(alumno => {
