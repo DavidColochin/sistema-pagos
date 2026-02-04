@@ -113,6 +113,13 @@ header p {
   font-weight: 600;
 }
 
+/* Hover verde SOLO en la pantalla principal */
+.options .btn:hover {
+  background: #28a745;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
 .btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
 
 .btn.green { background: #28a745; }
