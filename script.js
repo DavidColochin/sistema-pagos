@@ -88,27 +88,30 @@ function setupInputMasks() {
 // =======================
 //  LOGIN ADMIN
 // =======================
-window.login = function(){
+window.login = async function(){
   const pass = document.getElementById('adminPass').value;
+
   if(pass === adminPassword){
     document.getElementById('adminPanel').style.display = 'block';
+
     const titulo = document.getElementById('tituloAdmin');
     if(titulo) titulo.style.display = 'none';
+
     const loginContainer = document.querySelector('.login-container');
     if(loginContainer) loginContainer.style.display = 'none';
-    // mostrar y sincronizar datos
-    mostrarAlumnos();
-    cargarFiltros();
-    cargarTabla();
-    cargarFiltroMaestroAdmin();
 
-  const filtroMaestroAdmin = document.getElementById('filtroMaestroAdmin');
-  if (filtroMaestroAdmin) {
-    filtroMaestroAdmin.addEventListener('change', () => {
-      // al cambiar maestro, volvemos a listar con el filtro aplicado
-      mostrarAlumnos();
-    });
-  }
+    // 🔑 ORDEN CORRECTO
+    await cargarFiltroMaestroAdmin(); // primero llenar el select
+    await mostrarAlumnos();           // luego listar alumnos
+    await cargarFiltros();
+    await cargarTabla();
+
+    const filtroMaestroAdmin = document.getElementById('filtroMaestroAdmin');
+    if (filtroMaestroAdmin) {
+      filtroMaestroAdmin.addEventListener('change', () => {
+        mostrarAlumnos();
+      });
+    }
 
   } else {
     alert('Código incorrecto');
@@ -140,10 +143,11 @@ window.registrarAlumno = async function(){
     document.getElementById('grado').value    = '';
     document.getElementById('maestro').value  = '';
 
+    await cargarFiltroMaestroAdmin(); // <-- añade esta línea
     await mostrarAlumnos();
     await cargarTabla();
     await cargarFiltros();
-    await cargarFiltroMaestroAdmin(); // <-- añade esta línea
+    
   } else {
     alert('Complete todos los campos');
   }
