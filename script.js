@@ -562,6 +562,6 @@ async function cargarFiltroMaestroAdmin(){
   ).filter(m => m);
 
   // Render del select
-  sel.innerHTML = '<option value="TODOS">Todos</option>' +
-                  maestros.map(m => `<option value="${m}">${m}</option>`).join('');
+  sel.innerHTML = '<option value="TODOS" selected>Todos</option>' +
+                maestros.map(m => `<option value="${m}">${m}</option>`).join('');
 }
