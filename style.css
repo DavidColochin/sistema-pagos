@@ -378,3 +378,45 @@ input.upper {
 .btn-pago-icon:hover {
   filter: brightness(1.1);
 }
+
+.acciones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  color: white;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* efecto al tocar */
+.btn-icon:active {
+  transform: scale(0.92);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* colores */
+.btn-pago {
+  background: #28a745;
+}
+
+.btn-editar {
+  background: #ffc107;
+  color: #000;
+}
+
+.btn-eliminar {
+  background: #dc3545;
+}
+
