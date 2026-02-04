@@ -184,14 +184,25 @@ async function mostrarAlumnos(){
 
     li.innerHTML = `
       <div style="display:flex;gap:8px;align-items:center;">
-        <strong>${(alumno.nombre || '').toUpperCase()}</strong>
+        <span>${(alumno.nombre || '').toUpperCase()}</span>
         <span style="opacity:0.7;margin-left:6px;">(${alumno.grado || ''})</span>
       </div>
-      <div>
-        <button onclick='abrirModal("${alumno.id}")'>Pago</button>
-        <button onclick='abrirEditar("${alumno.id}")' title="Editar alumno" style="background:#ffc107;color:#000;">Editar</button>
-        <button onclick='eliminarAlumno("${alumno.id}")' style='background:red;'>Eliminar</button>
-      </div>`;
+      
+      <div class="btn-group">
+    <button onclick='abrirModal("${alumno.id}")' class="btn small" title="Pago">
+      <i class="fa-solid fa-money-bill-wave"></i>
+    </button>
+
+    <button onclick='abrirEditar("${alumno.id}")' class="btn small" title="Editar alumno">
+      <i class="fa-solid fa-pen"></i>
+    </button>
+
+    <button onclick='eliminarAlumno("${alumno.id}")' class="btn small danger" title="Eliminar">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </div>
+      `;
+   
     lista.appendChild(li);
   });
 
