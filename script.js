@@ -192,20 +192,19 @@ async function mostrarAlumnos(){
         <span style="opacity:0.7;margin-left:6px;">(${alumno.grado || ''})</span>
       </div>
       
-      <div class="btn-group">
-    <button onclick='abrirModal("${alumno.id}")' 
-        class="btn small btn-pago-icon" 
-        title="Pago">
-        <i class="fa-solid fa-money-bill-wave"></i>
-    </button>
+     <div class="acciones">
+  <button class="btn-icon btn-pago" onclick='abrirModal("${alumno.id}")' title="Registrar pago">
+    <i class="fa-solid fa-money-bill-wave"></i>
+  </button>
 
-    <button onclick='abrirEditar("${alumno.id}")' class="btn small" title="Editar alumno">
-      <i class="fa-solid fa-pen"></i>
-    </button>
+  <button class="btn-icon btn-editar" onclick='abrirEditar("${alumno.id}")' title="Editar alumno">
+    <i class="fa-solid fa-pen"></i>
+  </button>
 
-    <button onclick='eliminarAlumno("${alumno.id}")' class="btn small danger" title="Eliminar">
-      <i class="fa-solid fa-trash"></i>
-    </button>
+  <button class="btn-icon btn-eliminar" onclick='eliminarAlumno("${alumno.id}")' title="Eliminar alumno">
+    <i class="fa-solid fa-trash"></i>
+  </button>
+  
   </div>
       `;
    
