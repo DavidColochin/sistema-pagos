@@ -189,8 +189,10 @@ async function mostrarAlumnos(){
       </div>
       
       <div class="btn-group">
-    <button onclick='abrirModal("${alumno.id}")' class="btn small" title="Pago">
-      <i class="fa-solid fa-money-bill-wave"></i>
+    <button onclick='abrirModal("${alumno.id}")' 
+        class="btn small btn-pago-icon" 
+        title="Pago">
+        <i class="fa-solid fa-money-bill-wave"></i>
     </button>
 
     <button onclick='abrirEditar("${alumno.id}")' class="btn small" title="Editar alumno">
