@@ -448,3 +448,29 @@ input.upper {
     padding: 6px;
   }
 }
+/* ===== RESUMEN DE PAGOS ===== */
+
+.resumen-pagos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.card-resumen {
+  min-width: 90px;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+}
+
+.card-resumen.ok {
+  background: #28a745;
+}
+
+.card-resumen.pendiente {
+  background: #dc3545;
+}
