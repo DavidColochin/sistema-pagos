@@ -487,9 +487,13 @@ function generarResumenPendientes(alumnos){
 
   if(!contenedor) return;
 
-  const totalAlumnos = alumnos.length;
+  contenedor.innerHTML = '';
 
-  let texto = `Total: ${totalAlumnos}`;
+  const total = document.createElement('span');
+  total.className = 'resumen-btn total';
+  total.textContent = `Total: ${alumnos.length}`;
+
+  contenedor.appendChild(total);
 
   MESES_VALIDOS.forEach(mes => {
 
@@ -503,11 +507,18 @@ function generarResumenPendientes(alumnos){
 
     });
 
-    texto += ` | ${mes}: ${pendientes}`;
+    const item = document.createElement('span');
+
+    item.className =
+      pendientes === 0
+      ? 'resumen-btn ok'
+      : 'resumen-btn pendiente';
+
+    item.textContent = `${mes}: ${pendientes}`;
+
+    contenedor.appendChild(item);
 
   });
-
-  contenedor.innerHTML = texto;
 
 }
 
