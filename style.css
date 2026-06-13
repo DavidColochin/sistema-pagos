@@ -451,12 +451,30 @@ input.upper {
 /* ===== RESUMEN DE PAGOS ===== */
 
 .resumen-pagos {
-  background: #0b5ed7;
-  color: white;
-  padding: 10px 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.resumen-btn {
+  display: inline-block;
+  padding: 6px 12px;
   border-radius: 6px;
-  margin: 10px 0;
+  color: white;
   font-weight: bold;
-  text-align: center;
-  font-size: 14px;
+  font-size: 13px;
+}
+
+.resumen-btn.total {
+  background: #0b5ed7;
+}
+
+.resumen-btn.ok {
+  background: #28a745;
+}
+
+.resumen-btn.pendiente {
+  background: #dc3545;
 }
