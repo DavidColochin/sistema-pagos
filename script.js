@@ -487,7 +487,9 @@ function generarResumenPendientes(alumnos){
 
   if(!contenedor) return;
 
-  contenedor.innerHTML = '';
+  const totalAlumnos = alumnos.length;
+
+  let texto = `Total: ${totalAlumnos}`;
 
   MESES_VALIDOS.forEach(mes => {
 
@@ -501,21 +503,11 @@ function generarResumenPendientes(alumnos){
 
     });
 
-    const card = document.createElement('div');
-
-    card.className =
-      pendientes === 0
-      ? 'card-resumen ok'
-      : 'card-resumen pendiente';
-
-    card.innerHTML = `
-      <div>${mes}</div>
-      <div>${pendientes}</div>
-    `;
-
-    contenedor.appendChild(card);
+    texto += ` | ${mes}: ${pendientes}`;
 
   });
+
+  contenedor.innerHTML = texto;
 
 }
 
