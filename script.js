@@ -481,6 +481,44 @@ window.cargarFiltros = async function(){
   maestroSel.innerHTML = '<option value="Todos">Todos</option>' + maestros.map(m=>`<option>${m}</option>`).join('');
 };
 
+function generarResumenPendientes(alumnos){
+
+  const contenedor = document.getElementById('resumenPagos');
+
+  if(!contenedor) return;
+
+  contenedor.innerHTML = '';
+
+  MESES_VALIDOS.forEach(mes => {
+
+    let pendientes = 0;
+
+    alumnos.forEach(alumno => {
+
+      if(!alumno.pagos || !alumno.pagos[mes]){
+        pendientes++;
+      }
+
+    });
+
+    const card = document.createElement('div');
+
+    card.className =
+      pendientes === 0
+      ? 'card-resumen ok'
+      : 'card-resumen pendiente';
+
+    card.innerHTML = `
+      <div>${mes}</div>
+      <div>${pendientes}</div>
+    `;
+
+    contenedor.appendChild(card);
+
+  });
+
+}
+
 window.cargarTabla = async function(){
   const tbody = document.querySelector('#tablaPagos tbody');
   if(!tbody) return;
@@ -499,6 +537,8 @@ const alumnosFiltrados = cacheAlumnos.filter(a =>
   (gradoFiltro === 'Todos' || a.grado === gradoFiltro) &&
   (maestroFiltro === 'TODOS' || (a.maestro || '').toUpperCase() === maestroFiltro)
 );
+
+  generarResumenPendientes(alumnosFiltrados);
 
   // 🔤 ORDEN ALFABÉTICO POR NOMBRE (A → Z)
 alumnosFiltrados.sort((a, b) =>
